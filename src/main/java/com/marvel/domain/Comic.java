@@ -23,11 +23,10 @@ public class Comic {
     private Date modified;
     private String format;
     private Short pageCount;
-    private List<ComicDate> dates = new ArrayList<>();
-    private List<ComicPrice> prices = new ArrayList<>();
-    ;
     private Byte[] thumbnail;
     private Byte[] fullImage;
+    private List<ComicDate> dates = new ArrayList<>();
+    private List<ComicPrice> prices = new ArrayList<>();
 
     @DBRef
     private Set<Character> characters = new HashSet<>();

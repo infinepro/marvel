@@ -33,5 +33,4 @@ public class CharacterDTO {
     private Byte[] fullImage;
     private Set<ComicDTO> comicList = new HashSet<>();
 
-
 }

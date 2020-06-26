@@ -40,12 +40,10 @@ public class ComicDTO {
     @Max(1000)
     private Short pageCount;
 
-    private List<ComicDateDTO> dates = new ArrayList<>();
-    private List<ComicPriceDTO> prices = new ArrayList<>();
     private Byte[] thumbnail;
     private Byte[] fullImage;
-    private Set<CharacterDTO> characters = new HashSet<>();
-
+    private List<ComicDateDTO> dates = new ArrayList<>();
+    private List<ComicPriceDTO> prices = new ArrayList<>();
 }
 
 
