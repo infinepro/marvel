@@ -1,33 +1,37 @@
 package com.marvel.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import java.sql.Date;
-import java.util.Objects;
+import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@Accessors(chain = true)
 public class CharacterDTO {
 
+    private String id;
 
-    private Long id;
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String description;
+
+    @NotBlank
+    @Past
     private Date modified;
+
     private Byte[] thumbnail;
     private Byte[] fullImage;
-    private Set<ComicDTO> comicList;
+    private Set<ComicDTO> comicList = new HashSet<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CharacterDTO)) return false;
-        CharacterDTO character = (CharacterDTO) o;
-        return Objects.equals(id, character.id) &&
-                Objects.equals(name, character.name) &&
-                Objects.equals(description, character.description) &&
-                Objects.equals(modified, character.modified);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, modified);
-    }
 }

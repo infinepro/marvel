@@ -1,10 +1,26 @@
 package com.marvel.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import java.sql.Date;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@Accessors(chain = true)
 public class ComicDateDTO {
 
-    private Long id;
+    private String id;
+
+    @NotBlank
     private String type;
+
+    @NotBlank
+    @Past
     private Date date;
 }
