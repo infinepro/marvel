@@ -1,9 +1,7 @@
-package com.marvel.api.converters;
+package com.marvel.api.v1.converters;
 
-import com.marvel.api.model.ComicDateDTO;
-import com.marvel.api.model.ComicPriceDTO;
 import com.marvel.domain.Comic;
-import com.marvel.api.model.ComicDTO;
+import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.domain.ComicDate;
 import com.marvel.domain.ComicPrice;
 import org.springframework.core.convert.converter.Converter;

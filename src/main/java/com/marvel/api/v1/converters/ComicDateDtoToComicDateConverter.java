@@ -1,7 +1,7 @@
-package com.marvel.api.converters;
+package com.marvel.api.v1.converters;
 
 import com.marvel.domain.ComicDate;
-import com.marvel.api.model.ComicDateDTO;
+import com.marvel.api.v1.model.ComicDateDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;

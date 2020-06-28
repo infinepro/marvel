@@ -1,26 +1,28 @@
-package com.marvel.api.model;
+package com.marvel.api.v1.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Accessors(chain = true)
-public class CharacterDTO {
+public class ComicDTO {
 
-    private String id;
+    private String Id;
 
     @NotBlank
-    private String name;
+    private String title;
 
     @NotBlank
     private String description;
@@ -29,8 +31,17 @@ public class CharacterDTO {
     @Past
     private Date modified;
 
+    @NotBlank
+    private String format;
+
+    @Min(1)
+    @Max(1000)
+    private Short pageCount;
+
     private Byte[] thumbnail;
     private Byte[] fullImage;
-    private Set<ComicDTO> comicList = new HashSet<>();
-
+    private List<ComicDateDTO> dates = new ArrayList<>();
+    private List<ComicPriceDTO> prices = new ArrayList<>();
 }
+
+

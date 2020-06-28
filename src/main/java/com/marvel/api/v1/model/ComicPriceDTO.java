@@ -1,4 +1,4 @@
-package com.marvel.api.model;
+package com.marvel.api.v1.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

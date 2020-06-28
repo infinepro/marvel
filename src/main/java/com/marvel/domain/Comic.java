@@ -14,7 +14,7 @@ import java.util.*;
 @Setter
 @Accessors(chain = true)
 @Document
-public class Comic {
+public class    Comic {
 
     @Id
     private Long Id;
