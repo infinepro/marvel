@@ -1,6 +1,5 @@
 package com.marvel.api.v1.model;
 
-import com.marvel.domain.Character;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,9 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -45,7 +42,7 @@ public class ComicDTO {
     private Byte[] fullImage;
     private List<ComicDateDTO> dates = new ArrayList<>();
     private List<ComicPriceDTO> prices = new ArrayList<>();
-    private Set<CharacterDTO> characters = new HashSet<>();
+    private List<CharacterDTO> characters = new ArrayList<>();
 }
 
 

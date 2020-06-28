@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CharacterRepository extends MongoRepository<Character, Long> {
@@ -13,5 +14,5 @@ public interface CharacterRepository extends MongoRepository<Character, Long> {
 
     Optional<Character> findById(Long id);
 
-    Optional<Character> findByName(String name);
+    List<Character> findCharactersByNameAndDescription(Pageable page, String name);
 }

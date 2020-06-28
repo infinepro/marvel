@@ -15,7 +15,6 @@ public class ComicPriceToComicPriceDtoConverter implements Converter<ComicPrice,
         if (comicPrice == null)
             return null;
 
-
         return new ComicPriceDTO()
                 .setId(comicPrice.getId().toString())
                 .setPrice(comicPrice.getPrice())

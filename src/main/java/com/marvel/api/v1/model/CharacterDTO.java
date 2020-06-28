@@ -8,8 +8,6 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter

@@ -8,13 +8,15 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
 @Accessors(chain = true)
 @Document
-public class    Comic {
+public class Comic {
 
     @Id
     private Long Id;
@@ -29,7 +31,7 @@ public class    Comic {
     private List<ComicPrice> prices = new ArrayList<>();
 
     @DBRef
-    private Set<Character> characters = new HashSet<>();
+    private List<Character> characters = new ArrayList<>();
 
     public void addComicDate(ComicDate comicDate) {
         if (comicDate != null) {

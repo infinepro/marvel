@@ -8,9 +8,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Date;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -27,7 +27,7 @@ public class Character {
     private Byte[] fullImage;
 
     @DBRef
-    private Set<Comic> comicList = new HashSet<>();
+    private List<Comic> comicList = new ArrayList<>();
 
     public void addComic(Comic comic) {
         if (comic != null) {

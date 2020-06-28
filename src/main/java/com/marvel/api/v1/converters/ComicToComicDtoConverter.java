@@ -1,16 +1,15 @@
 package com.marvel.api.v1.converters;
 
 import com.marvel.api.v1.model.CharacterDTO;
-import com.marvel.domain.Comic;
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.ComicDateDTO;
 import com.marvel.api.v1.model.ComicPriceDTO;
+import com.marvel.domain.Comic;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,10 +33,10 @@ public class ComicToComicDtoConverter implements Converter<Comic, ComicDTO> {
         if (comic == null)
             return null;
 
-        final Set<CharacterDTO> characters = comic.getCharacters()
+        final List<CharacterDTO> characters = comic.getCharacters()
                 .stream()
                 .map(characterToCharacterDtoConverter::convert)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
         final List<ComicPriceDTO> pricesDto = comic.getPrices()
                 .stream()
