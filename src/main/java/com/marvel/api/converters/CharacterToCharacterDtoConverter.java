@@ -1,8 +1,8 @@
-package com.marvel.converters;
+package com.marvel.api.converters;
 
 import com.marvel.domain.Character;
-import com.marvel.dto.CharacterDTO;
-import com.marvel.dto.ComicDTO;
+import com.marvel.api.model.CharacterDTO;
+import com.marvel.api.model.ComicDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;

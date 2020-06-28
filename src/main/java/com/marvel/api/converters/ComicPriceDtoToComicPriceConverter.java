@@ -1,7 +1,7 @@
-package com.marvel.converters;
+package com.marvel.api.converters;
 
 import com.marvel.domain.ComicPrice;
-import com.marvel.dto.ComicPriceDTO;
+import com.marvel.api.model.ComicPriceDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;

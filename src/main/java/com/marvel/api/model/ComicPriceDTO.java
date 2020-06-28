@@ -1,19 +1,18 @@
-package com.marvel.dto;
+package com.marvel.api.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
-import java.sql.Date;
+import javax.validation.constraints.*;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Accessors(chain = true)
-public class ComicDateDTO {
+public class ComicPriceDTO {
 
     private String id;
 
@@ -21,6 +20,7 @@ public class ComicDateDTO {
     private String type;
 
     @NotBlank
-    @Past
-    private Date date;
+    @PositiveOrZero
+    @Digits(integer = 9, fraction = 2)
+    private BigDecimal price;
 }
