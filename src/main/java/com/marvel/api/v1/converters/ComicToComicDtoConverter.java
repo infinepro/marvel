@@ -1,5 +1,6 @@
 package com.marvel.api.v1.converters;
 
+import com.marvel.api.v1.model.CharacterDTO;
 import com.marvel.domain.Comic;
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.ComicDateDTO;
@@ -9,16 +10,20 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public class ComicToComicDtoConverter implements Converter<Comic, ComicDTO> {
 
+    private final CharacterToCharacterDtoConverter characterToCharacterDtoConverter;
     private final ComicDateToComicDateDtoConverter comicDateToComicDateDtoConverter;
     private final ComicPriceToComicPriceDtoConverter comicPriceToComicPriceDtoConverter;
 
-    public ComicToComicDtoConverter(ComicDateToComicDateDtoConverter comicDateToComicDateDtoConverter,
+    public ComicToComicDtoConverter(CharacterToCharacterDtoConverter characterToCharacterDtoConverter,
+                                    ComicDateToComicDateDtoConverter comicDateToComicDateDtoConverter,
                                     ComicPriceToComicPriceDtoConverter comicPriceToComicPriceDtoConverter) {
+        this.characterToCharacterDtoConverter = characterToCharacterDtoConverter;
         this.comicDateToComicDateDtoConverter = comicDateToComicDateDtoConverter;
         this.comicPriceToComicPriceDtoConverter = comicPriceToComicPriceDtoConverter;
     }
@@ -28,6 +33,11 @@ public class ComicToComicDtoConverter implements Converter<Comic, ComicDTO> {
     public ComicDTO convert(Comic comic) {
         if (comic == null)
             return null;
+
+        final Set<CharacterDTO> characters = comic.getCharacters()
+                .stream()
+                .map(characterToCharacterDtoConverter::convert)
+                .collect(Collectors.toSet());
 
         final List<ComicPriceDTO> pricesDto = comic.getPrices()
                 .stream()
@@ -51,7 +61,8 @@ public class ComicToComicDtoConverter implements Converter<Comic, ComicDTO> {
                 .setThumbnail(comic.getThumbnail())
                 .setFullImage(comic.getFullImage())
                 .setDates(datesDto)
-                .setPrices(pricesDto);
+                .setPrices(pricesDto)
+                .setCharacters(characters);
 
         return comicDto;
     }

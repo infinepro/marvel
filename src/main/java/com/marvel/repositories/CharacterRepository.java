@@ -11,6 +11,8 @@ public interface CharacterRepository extends MongoRepository<Character, Long> {
 
     Optional<Character> findById(Long id);
 
+    Optional<Character> findByName(String name);
+
     List<Character> findAllById(Long id, Pageable pageable);
 
 }

@@ -11,6 +11,9 @@ public interface ComicRepository extends MongoRepository<Comic, Long> {
 
     Optional<Comic> findById(Long id);
 
+    Optional<Comic> findByTitle(String title);
+
     List<Comic> findById(Long id, Pageable pageable);
 
 }
+

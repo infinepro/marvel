@@ -1,5 +1,6 @@
 package com.marvel.api.v1.converters;
 
+import com.marvel.domain.Character;
 import com.marvel.domain.Comic;
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.domain.ComicDate;
@@ -9,18 +10,22 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public class ComicDtoToComicConverter implements Converter<ComicDTO, Comic> {
 
+    private final CharacterDtoToCharacterConverter characterDtoToCharacterConverter;
     private final ComicDateDtoToComicDateConverter comicDateDtoToComicDateConverter;
-    private final ComicPriceDtoToComicPriceConverter comicPriceDtoToComicPriceConverterr;
+    private final ComicPriceDtoToComicPriceConverter comicPriceDtoToComicPriceConverter;
 
-    public ComicDtoToComicConverter(ComicDateDtoToComicDateConverter comicDateDtoToComicDateConverter,
-                                    ComicPriceDtoToComicPriceConverter comicPriceDtoToComicPriceConverterr) {
+    public ComicDtoToComicConverter(CharacterDtoToCharacterConverter characterDtoToCharacterConverter,
+                                    ComicDateDtoToComicDateConverter comicDateDtoToComicDateConverter,
+                                    ComicPriceDtoToComicPriceConverter comicPriceDtoToComicPriceConverter) {
+        this.characterDtoToCharacterConverter = characterDtoToCharacterConverter;
         this.comicDateDtoToComicDateConverter = comicDateDtoToComicDateConverter;
-        this.comicPriceDtoToComicPriceConverterr = comicPriceDtoToComicPriceConverterr;
+        this.comicPriceDtoToComicPriceConverter = comicPriceDtoToComicPriceConverter;
     }
 
     @Override
@@ -29,9 +34,14 @@ public class ComicDtoToComicConverter implements Converter<ComicDTO, Comic> {
         if (comicDto == null)
             return null;
 
+        final Set<Character> characters = comicDto.getCharacters()
+                .stream()
+                .map(characterDtoToCharacterConverter::convert)
+                .collect(Collectors.toSet());
+
         final List<ComicPrice> prices = comicDto.getPrices()
                 .stream()
-                .map(comicPriceDtoToComicPriceConverterr::convert)
+                .map(comicPriceDtoToComicPriceConverter::convert)
                 .collect(Collectors.toList());
 
         final List<ComicDate> dates = comicDto.getDates()
@@ -51,7 +61,8 @@ public class ComicDtoToComicConverter implements Converter<ComicDTO, Comic> {
                 .setThumbnail(comicDto.getThumbnail())
                 .setFullImage(comicDto.getFullImage())
                 .setDates(dates)
-                .setPrices(prices);
+                .setPrices(prices)
+                .setCharacters(characters);
 
         return comic;
     }
