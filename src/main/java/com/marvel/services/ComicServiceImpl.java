@@ -1,4 +1,7 @@
 package com.marvel.services;
 
-public class ComicServiceImpl {
+import org.springframework.stereotype.Service;
+
+@Service
+public class ComicServiceImpl implements ComicService {
 }
