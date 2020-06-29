@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,5 +49,18 @@ public class Character {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, modified);
+    }
+
+    @Override
+    public String toString() {
+        return "Character{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", modified=" + modified +
+                ", thumbnail=" + Arrays.toString(thumbnail) +
+                ", fullImage=" + Arrays.toString(fullImage) +
+                ", comicList=" + comicList +
+                '}';
     }
 }

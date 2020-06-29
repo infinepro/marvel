@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Slf4j
+@Slf4j
 @Component
 public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>, DateServiceHelper {
 
@@ -40,9 +40,9 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        //log.warn("start loading data");
+        log.warn("start loading data");
         //loadComics();
-        //log.warn("load data success");
+        log.warn("load data success");
     }
 
     private List<Character> loadCharacters() {

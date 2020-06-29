@@ -18,7 +18,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class ComicDTO {
 
-    private String Id;
+    private String id;
 
     @NotBlank
     private String title;

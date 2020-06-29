@@ -8,6 +8,8 @@ import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.api.v1.model.ResponseDataContainerModel;
 import com.marvel.domain.Character;
 import com.marvel.repositories.CharacterRepository;
+import com.marvel.repositories.ComicRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,28 +19,32 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CharacterServiceImpl implements CharacterService, DateServiceHelper {
 
     private final CharacterRepository characterRepository;
     private final CharacterToCharacterDtoConverter characterToDtoConverter;
     private final ComicToComicDtoConverter comicToDtoConverter;
+    private final ComicRepository comicRepository;
 
     public CharacterServiceImpl(CharacterRepository characterRepository,
                                 CharacterToCharacterDtoConverter characterToDtoConverter,
-                                ComicToComicDtoConverter comicToDtoConverter) {
+                                ComicToComicDtoConverter comicToDtoConverter,
+                                ComicRepository comicRepository) {
         this.characterRepository = characterRepository;
         this.characterToDtoConverter = characterToDtoConverter;
         this.comicToDtoConverter = comicToDtoConverter;
+        this.comicRepository = comicRepository;
     }
 
     @Override
-    public ResponseDataContainerModel<Character> getCharacters(QueryCharacterModel model) {
-
+    public ResponseDataContainerModel<CharacterDTO> getCharacters(QueryCharacterModel model) {
         Sort sort;
-        List<Character> characters;
+        List<CharacterDTO> characters;
         Long modifiedSince;
 
+        //create sort
         if (model.getOrderBy() == null || model.getOrderBy().equals("name") || model.getOrderBy().isEmpty())
             sort = Sort.by("name");
         else if (model.getOrderBy().equals("-name"))
@@ -50,22 +56,28 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
 
         PageRequest pageable = PageRequest.of(model.getNumberPage(), model.getPageSize(), sort);
 
+        //parse date
         if (model.getModifiedSince() == null || model.getModifiedSince().isEmpty())
             modifiedSince = Long.MIN_VALUE;
         else
             modifiedSince = parseStringDateFormatToLong(model.getModifiedSince());
 
-        characters = characterRepository
-                .findAllByNameAndComicIdAndModifiedDateSince(
-                        model.getName(),
-                        model.getComicId(),
-                        modifiedSince,
-                        pageable)
-                .stream()
-                .collect(Collectors.toList());
 
+        if (model.getName() == null || model.getName().isEmpty()) {
+            characters = characterRepository
+                    .findAllByModifiedAfter(modifiedSince, pageable)
+                    .stream()
+                    .map(characterToDtoConverter::convert)
+                    .collect(Collectors.toList());
+        } else {
+            characters = characterRepository
+                    .findAllByNameAndModifiedAfter(model.getName(), modifiedSince, pageable)
+                    .stream()
+                    .map(characterToDtoConverter::convert)
+                    .collect(Collectors.toList());
+        }
 
-        return new ResponseDataContainerModel<Character>()
+        return new ResponseDataContainerModel<CharacterDTO>()
                 .setResults(characters)
                 .setCount(characters.size())
                 .setNumberPage(model.getNumberPage())
@@ -74,6 +86,7 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
 
     @Override
     public CharacterDTO getCharacterById(Long id) {
+        log.warn(String.valueOf(characterRepository.findById(id).get()));
         Optional<Character> optionalCharacter = characterRepository.findById(id);
 
         if (optionalCharacter.isPresent())
@@ -92,4 +105,5 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
                 .map(comicToDtoConverter::convert)
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
+
 }

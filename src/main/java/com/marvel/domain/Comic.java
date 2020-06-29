@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,7 +19,7 @@ import java.util.Objects;
 public class Comic {
 
     @Id
-    private Long Id;
+    private Long id;
     private String title;
     private String description;
     private Long modified;
@@ -66,6 +67,23 @@ public class Comic {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getTitle(), getDescription(), getModified(), getFormat(), getPageCount());
+    }
+
+    @Override
+    public String toString() {
+        return "Comic{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", modified=" + modified +
+                ", format='" + format + '\'' +
+                ", pageCount=" + pageCount +
+                ", thumbnail=" + Arrays.toString(thumbnail) +
+                ", fullImage=" + Arrays.toString(fullImage) +
+                ", dates=" + dates +
+                ", prices=" + prices +
+                ", characters=" + characters +
+                '}';
     }
 }
 
