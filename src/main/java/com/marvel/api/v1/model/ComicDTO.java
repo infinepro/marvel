@@ -35,7 +35,7 @@ public class ComicDTO {
 
     @Min(1)
     @Max(1000)
-    private Short pageCount;
+    private Integer pageCount;
 
     private Byte[] thumbnail;
     private Byte[] fullImage;

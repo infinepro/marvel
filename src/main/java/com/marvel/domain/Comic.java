@@ -23,7 +23,7 @@ public class Comic {
     private String description;
     private Long modified;
     private String format;
-    private Short pageCount;
+    private Integer pageCount;
     private Byte[] thumbnail;
     private Byte[] fullImage;
     private List<ComicDate> dates = new ArrayList<>();

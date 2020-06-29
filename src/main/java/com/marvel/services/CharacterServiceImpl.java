@@ -59,7 +59,8 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
                 .findAllByNameAndComicIdAndModifiedDateSince(
                         model.getName(),
                         model.getComicId(),
-                        modifiedSince, pageable)
+                        modifiedSince,
+                        pageable)
                 .stream()
                 .collect(Collectors.toList());
 

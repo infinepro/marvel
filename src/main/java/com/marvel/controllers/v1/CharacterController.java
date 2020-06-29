@@ -6,11 +6,13 @@ import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.api.v1.model.ResponseDataContainerModel;
 import com.marvel.domain.Character;
 import com.marvel.services.CharacterService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/public")
 public class CharacterController {
@@ -21,9 +23,22 @@ public class CharacterController {
         this.characterService = characterService;
     }
 
+    //test
+    @GetMapping("/all-characters")
+    @ResponseStatus(HttpStatus.OK)
+    public CharacterDTO getCharacters() {
+        QueryCharacterModel model = new QueryCharacterModel();
+        model.setNumberPage(0)
+                .setOrderBy("-name")
+                .setPageSize(3);
+
+        return characterService.getCharacterById(33L);
+    }
+
     @GetMapping("/characters")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDataContainerModel<Character> getCharacters(QueryCharacterModel model){
+    public ResponseDataContainerModel<Character> getCharacters(QueryCharacterModel model) {
+
         return characterService.getCharacters(model);
     }
 
@@ -37,6 +52,7 @@ public class CharacterController {
     @GetMapping("/{characterId}/comics")
     @ResponseStatus(HttpStatus.OK)
     public List<ComicDTO> getComicsByCharacterId(@PathVariable String characterId) {
+
         return characterService.getComicsByCharacterId(Long.valueOf(characterId));
     }
 }

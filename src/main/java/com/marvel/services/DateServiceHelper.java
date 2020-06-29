@@ -9,7 +9,8 @@ public interface DateServiceHelper {
 
     ZoneOffset MOSCOW_ZONE = ZoneOffset.ofHours(3);
 
-    //format 'dd.MM.yyyy HH:mm:ss'
+    // take format 'dd.MM.yyyy HH:mm:ss'
+    // return format long milliseconds since 1970,
     default Long parseStringDateFormatToLong(String dateTime) {
 
         return LocalDateTime
@@ -17,7 +18,8 @@ public interface DateServiceHelper {
                 .toInstant(MOSCOW_ZONE).getEpochSecond();
     }
 
-    //since 1970
+    // take format long milliseconds since 1970,
+    // return format 'dd.MM.yyyy HH:mm:ss'
     default String parseLongDateFormatToString(Long dateTime) {
 
         return Instant
