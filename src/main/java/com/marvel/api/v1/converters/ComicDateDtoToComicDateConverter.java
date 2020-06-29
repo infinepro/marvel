@@ -2,12 +2,13 @@ package com.marvel.api.v1.converters;
 
 import com.marvel.domain.ComicDate;
 import com.marvel.api.v1.model.ComicDateDTO;
+import com.marvel.services.DateServiceHelper;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComicDateDtoToComicDateConverter implements Converter<ComicDateDTO, ComicDate> {
+public class ComicDateDtoToComicDateConverter implements Converter<ComicDateDTO, ComicDate>, DateServiceHelper {
 
     @Override
     @Nullable
@@ -17,7 +18,7 @@ public class ComicDateDtoToComicDateConverter implements Converter<ComicDateDTO,
 
         return new ComicDate()
                 .setId(Long.valueOf(comicDateDTO.getId()))
-                .setDate(comicDateDTO.getDate())
+                .setDate(parseStringDateFormatToLong(comicDateDTO.getDate()))
                 .setType(comicDateDTO.getType());
     }
 }

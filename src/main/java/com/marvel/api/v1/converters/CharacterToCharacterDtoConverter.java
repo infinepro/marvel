@@ -2,12 +2,13 @@ package com.marvel.api.v1.converters;
 
 import com.marvel.api.v1.model.CharacterDTO;
 import com.marvel.domain.Character;
+import com.marvel.services.DateServiceHelper;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CharacterToCharacterDtoConverter implements Converter<Character, CharacterDTO> {
+public class CharacterToCharacterDtoConverter implements Converter<Character, CharacterDTO>, DateServiceHelper {
 
     @Override
     @Nullable
@@ -21,7 +22,7 @@ public class CharacterToCharacterDtoConverter implements Converter<Character, Ch
                 .setId(character.getId().toString())
                 .setName(character.getName())
                 .setDescription(character.getDescription())
-                .setModified(character.getModified())
+                .setModified(parseLongDateFormatToString(character.getModified()))
                 .setThumbnail(character.getThumbnail())
                 .setFullImage(character.getFullImage());
 

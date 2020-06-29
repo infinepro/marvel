@@ -3,15 +3,16 @@ package com.marvel.api.v1.model;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.sql.Date;
-
 @Data
 @Accessors(chain = true)
 public class QueryCharacterModel {
 
+    private Long id;
     private String Name;
-    private Date modifiedSince;
-    private Integer comicId;
+    private String modifiedSince;
+    private Long comicId;
+
+    //for sort
     private String orderBy;
     private Integer numberPage;
     private Integer pageSize;

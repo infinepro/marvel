@@ -5,6 +5,7 @@ import com.marvel.domain.Character;
 import com.marvel.domain.Comic;
 import com.marvel.domain.ComicDate;
 import com.marvel.domain.ComicPrice;
+import com.marvel.services.DateServiceHelper;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ComicDtoToComicConverter implements Converter<ComicDTO, Comic> {
+public class ComicDtoToComicConverter implements Converter<ComicDTO, Comic>, DateServiceHelper {
 
     private final CharacterDtoToCharacterConverter characterDtoToCharacterConverter;
     private final ComicDateDtoToComicDateConverter comicDateDtoToComicDateConverter;
@@ -54,7 +55,7 @@ public class ComicDtoToComicConverter implements Converter<ComicDTO, Comic> {
                 .setId(Long.valueOf(comicDto.getId()))
                 .setTitle(comicDto.getTitle())
                 .setDescription(comicDto.getDescription())
-                .setModified(comicDto.getModified())
+                .setModified(parseStringDateFormatToLong(comicDto.getModified()))
                 .setFormat(comicDto.getFormat())
                 .setPageCount(comicDto.getPageCount())
                 .setThumbnail(comicDto.getThumbnail())

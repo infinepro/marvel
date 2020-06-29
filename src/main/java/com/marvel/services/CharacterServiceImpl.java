@@ -4,8 +4,8 @@ import com.marvel.api.v1.converters.CharacterToCharacterDtoConverter;
 import com.marvel.api.v1.converters.ComicToComicDtoConverter;
 import com.marvel.api.v1.model.CharacterDTO;
 import com.marvel.api.v1.model.ComicDTO;
-import com.marvel.api.v1.model.DataContainerModel;
 import com.marvel.api.v1.model.QueryCharacterModel;
+import com.marvel.api.v1.model.ResponseDataContainerModel;
 import com.marvel.domain.Character;
 import com.marvel.repositories.CharacterRepository;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class CharacterServiceImpl implements CharacterService {
+public class CharacterServiceImpl implements CharacterService, DateServiceHelper {
 
     private final CharacterRepository characterRepository;
     private final CharacterToCharacterDtoConverter characterToDtoConverter;
@@ -33,10 +33,11 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public DataContainerModel<Character> getCharacters(QueryCharacterModel model) {
+    public ResponseDataContainerModel<Character> getCharacters(QueryCharacterModel model) {
 
         Sort sort;
         List<Character> characters;
+        Long modifiedSince;
 
         if (model.getOrderBy() == null || model.getOrderBy().equals("name") || model.getOrderBy().isEmpty())
             sort = Sort.by("name");
@@ -49,16 +50,21 @@ public class CharacterServiceImpl implements CharacterService {
 
         PageRequest pageable = PageRequest.of(model.getNumberPage(), model.getPageSize(), sort);
 
-        if (model.getName() != null && model.getName().isEmpty()) {
-            characters = characterRepository.findByName(pageable, model.getName());
-        }
+        if (model.getModifiedSince() == null || model.getModifiedSince().isEmpty())
+            modifiedSince = Long.MIN_VALUE;
+        else
+            modifiedSince = parseStringDateFormatToLong(model.getModifiedSince());
 
-        characters = characterRepository.findAll(pageable)
+        characters = characterRepository
+                .findAllByNameAndComicIdAndModifiedDateSince(
+                        model.getName(),
+                        model.getComicId(),
+                        modifiedSince, pageable)
                 .stream()
                 .collect(Collectors.toList());
 
 
-        return new DataContainerModel<Character>()
+        return new ResponseDataContainerModel<Character>()
                 .setResults(characters)
                 .setCount(characters.size())
                 .setNumberPage(model.getNumberPage())

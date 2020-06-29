@@ -7,7 +7,6 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
-import java.sql.Date;
 
 @Getter
 @Setter
@@ -22,5 +21,5 @@ public class ComicDateDTO {
 
     @NotBlank
     @Past
-    private Date date;
+    private String date;
 }

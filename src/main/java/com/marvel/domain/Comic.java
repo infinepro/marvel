@@ -7,7 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +21,7 @@ public class Comic {
     private Long Id;
     private String title;
     private String description;
-    private Date modified;
+    private Long modified;
     private String format;
     private Short pageCount;
     private Byte[] thumbnail;

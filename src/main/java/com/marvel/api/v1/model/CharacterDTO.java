@@ -7,7 +7,6 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
-import java.sql.Date;
 
 @Getter
 @Setter
@@ -25,7 +24,7 @@ public class CharacterDTO {
 
     @NotBlank
     @Past
-    private Date modified;
+    private String modified;
 
     private Byte[] thumbnail;
     private Byte[] fullImage;

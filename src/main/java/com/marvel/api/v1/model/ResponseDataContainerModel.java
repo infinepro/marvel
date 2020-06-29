@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class DataContainerModel<T> {
+public class ResponseDataContainerModel<T> {
 
     private Integer numberPage;
     private Integer pageSize;

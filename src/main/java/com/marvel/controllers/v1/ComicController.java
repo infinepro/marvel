@@ -1,6 +1,6 @@
 package com.marvel.controllers.v1;
 
-import com.marvel.api.v1.model.DataContainerModel;
+import com.marvel.api.v1.model.ResponseDataContainerModel;
 import com.marvel.domain.Comic;
 import com.marvel.repositories.ComicRepository;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class ComicController {
 
     @GetMapping("/comics")
     @ResponseStatus(HttpStatus.OK)
-    public DataContainerModel<Comic> getComics() {
+    public ResponseDataContainerModel<Comic> getComics() {
         //todo:`1
         return null;
     }
