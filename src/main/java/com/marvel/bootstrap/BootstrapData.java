@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,17 +21,15 @@ import java.util.List;
 @Component
 public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>, DateServiceHelper {
 
-    private final Long nowDateTime;
-    private final Long prevDateTime;
+    private final LocalDateTime nowDateTime;
+    private final LocalDateTime prevDateTime;
     private final CharacterRepository characterRepository;
     private final ComicRepository comicRepository;
+    private List<Comic> comics;
 
     public BootstrapData(CharacterRepository characterRepository, ComicRepository comicRepository) {
-        this.nowDateTime = parseStringDateFormatToLong(LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
-
-        this.prevDateTime = parseStringDateFormatToLong(LocalDateTime.of(1995, 3, 25, 12, 55)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
+        this.nowDateTime = LocalDateTime.now();
+        this.prevDateTime = LocalDateTime.of(1995, 3, 25, 12, 55);
 
         this.characterRepository = characterRepository;
         this.comicRepository = comicRepository;
@@ -41,7 +38,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         log.warn("start loading data");
-        //loadComics();
+        loadComics();
         log.warn("load data success");
     }
 
@@ -69,9 +66,9 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
     private void loadComics() {
         List<ComicDate> dates = new ArrayList<ComicDate>() {{
-            add(new ComicDate().setId(1L).setType("hard").setDate(6513186515L));
-            add(new ComicDate().setId(2L).setType("very hard").setDate(6512313186515L));
-            add(new ComicDate().setId(2L).setType("very easy").setDate(3186515L));
+            add(new ComicDate().setId(1L).setType("hard").setDate(LocalDateTime.now()));
+            add(new ComicDate().setId(2L).setType("very hard").setDate(LocalDateTime.now()));
+            add(new ComicDate().setId(2L).setType("very easy").setDate(LocalDateTime.now()));
         }};
 
         List<ComicPrice> prices = new ArrayList<ComicPrice>() {{
@@ -94,6 +91,6 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
                 .setPrices(prices)
                 .setCharacters(loadCharacters());
 
-        comicRepository.insert(newComic);
+        comicRepository.save(newComic);
     }
 }

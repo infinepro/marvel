@@ -1,18 +1,9 @@
 package com.marvel.repositories;
 
 import com.marvel.domain.Comic;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface ComicRepository extends MongoRepository<Comic, Long> {
-
-    Optional<Comic> findById(Long id);
-
-    List<Comic> findAllById(Long id);
-
-    Optional<Comic> findByTitle(String title);
+public interface ComicRepository extends CrudRepository<Comic, Long> {
 
 
 }

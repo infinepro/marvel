@@ -40,28 +40,15 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
 
     @Override
     public ResponseDataContainerModel<CharacterDTO> getCharacters(QueryCharacterModel model) {
-        Sort sort;
-        List<CharacterDTO> characters;
-        Long modifiedSince;
 
-        //create sort
+        /*//create sort
         if (model.getOrderBy() == null || model.getOrderBy().equals("name") || model.getOrderBy().isEmpty())
-            sort = Sort.by("name");
+
         else if (model.getOrderBy().equals("-name"))
-            sort = Sort.by("name").descending();
+
         else if (model.getOrderBy().equals("modified"))
-            sort = Sort.by("modified");
+
         else
-            sort = Sort.by("modified").descending();
-
-        PageRequest pageable = PageRequest.of(model.getNumberPage(), model.getPageSize(), sort);
-
-        //parse date
-        if (model.getModifiedSince() == null || model.getModifiedSince().isEmpty())
-            modifiedSince = Long.MIN_VALUE;
-        else
-            modifiedSince = parseStringDateFormatToLong(model.getModifiedSince());
-
 
         if (model.getName() == null || model.getName().isEmpty()) {
             characters = characterRepository
@@ -81,12 +68,12 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
                 .setResults(characters)
                 .setCount(characters.size())
                 .setNumberPage(model.getNumberPage())
-                .setPageSize(model.getPageSize());
+                .setPageSize(model.getPageSize());*/
+        return null;
     }
 
     @Override
     public CharacterDTO getCharacterById(Long id) {
-        log.warn(String.valueOf(characterRepository.findById(id).get()));
         Optional<Character> optionalCharacter = characterRepository.findById(id);
 
         if (optionalCharacter.isPresent())

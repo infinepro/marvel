@@ -3,10 +3,9 @@ package com.marvel.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,22 +14,32 @@ import java.util.Objects;
 @Getter
 @Setter
 @Accessors(chain = true)
-@Document
+@Entity
 public class Comic {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String description;
-    private Long modified;
+    private LocalDateTime modified;
     private String format;
     private Integer pageCount;
+
+    @Lob
     private Byte[] thumbnail;
+
+    @Lob
     private Byte[] fullImage;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comic")
     private List<ComicDate> dates = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comic")
     private List<ComicPrice> prices = new ArrayList<>();
 
-    @DBRef
+    @ManyToMany(mappedBy = "comicList")
     private List<Character> characters = new ArrayList<>();
 
     public void addComicDate(ComicDate comicDate) {

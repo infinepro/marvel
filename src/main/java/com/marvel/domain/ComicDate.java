@@ -4,14 +4,22 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Accessors(chain = true)
+@Entity
 public class ComicDate {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String type;
-    private Long date;
+    private LocalDateTime date;
+
+    @ManyToOne
+    private Comic comic;
 }

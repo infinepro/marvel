@@ -22,6 +22,17 @@ public class CharacterController {
         this.characterService = characterService;
     }
 
+    @GetMapping("/characters33")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDataContainerModel<CharacterDTO> getCharacters33() {
+
+        QueryCharacterModel model = new QueryCharacterModel();
+
+
+        return characterService.getCharacters(model);
+    }
+
+
     @GetMapping("/characters")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDataContainerModel<CharacterDTO> getCharacters(QueryCharacterModel model) {
@@ -36,7 +47,7 @@ public class CharacterController {
         return characterService.getCharacterById(Long.valueOf(characterId));
     }
 
-    @GetMapping("/{characterId}/comics")
+    @GetMapping("/characters/{characterId}/comics")
     @ResponseStatus(HttpStatus.OK)
     public List<ComicDTO> getComicsByCharacterId(@PathVariable String characterId) {
 
