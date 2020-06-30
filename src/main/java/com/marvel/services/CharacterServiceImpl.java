@@ -7,6 +7,7 @@ import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.api.v1.model.ResponseDataContainerModel;
 import com.marvel.domain.MarvelCharacter;
+import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.repositories.CharacterRepository;
 import com.marvel.repositories.ComicRepository;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,10 +58,15 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
 
         Pageable pageable = PageRequest.of(model.getNumberPage(), model.getPageSize(), sort);
 
-        Page<MarvelCharacter> characters = characterRepository.findAllByModifiedDateOrderByNameAsc(
-                parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
-                parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
-                pageable);
+        Page<MarvelCharacter> characters;
+        try {
+            characters = characterRepository.findAllByModifiedDateOrderByNameAsc(
+                    parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
+                    parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
+                    pageable);
+        } catch (DateTimeParseException e) {
+            throw new BadParametersException("Bad parameter, the date must be in the format: " + DATE_FORMAT);
+        }
 
         return characters;
     }

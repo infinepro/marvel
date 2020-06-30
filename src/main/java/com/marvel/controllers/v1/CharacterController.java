@@ -81,6 +81,8 @@ public class CharacterController {
         return dataWrapper;
     }
 
+
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(CharacterNotFoundException.class)
     public CharacterDataWrapper<Object> handleNotFound(Exception exception) {
