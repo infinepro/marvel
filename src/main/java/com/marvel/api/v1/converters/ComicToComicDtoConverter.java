@@ -35,10 +35,10 @@ public class ComicToComicDtoConverter implements Converter<Comic, ComicDTO>, Dat
         if (comic == null)
             return null;
 
-        final Set<MarvelCharacterDTO> characters = comic.getMarvelCharacters()
+        final List<MarvelCharacterDTO> characters = comic.getMarvelCharacters()
                 .stream()
                 .map(characterToCharacterDtoConverter::convert)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
         final List<ComicPriceDTO> pricesDto = comic.getPrices()
                 .stream()

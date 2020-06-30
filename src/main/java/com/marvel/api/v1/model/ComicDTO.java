@@ -43,7 +43,7 @@ public class ComicDTO {
     private Byte[] fullImage;
     private List<ComicDateDTO> dates = new ArrayList<>();
     private List<ComicPriceDTO> prices = new ArrayList<>();
-    private Set<MarvelCharacterDTO> marvelCharacters = new HashSet<>();
+    private List<MarvelCharacterDTO> marvelCharacters = new ArrayList<>();
 }
 
 

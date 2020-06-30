@@ -14,12 +14,14 @@ public interface CharacterRepository extends JpaRepository<MarvelCharacter, Long
 
     Optional<MarvelCharacter> findById(Long id);
 
+    Optional<MarvelCharacter> findByName(String name);
+
     @Query("SELECT m FROM MarvelCharacter m " +
-            "WHERE m.modified >= :modifiedFrom AND m.modified <= :modifiedTo " +
-            "ORDER BY m.name ASC")
+            "WHERE m.modified >= :modifiedFrom AND m.modified <= :modifiedTo ")
     Page<MarvelCharacter> findAllByModifiedDateOrderByNameAsc(@Param("modifiedFrom") LocalDateTime modifiedFrom,
-                                                          @Param("modifiedTo") LocalDateTime modifiedTo,
-                                                          Pageable pageable);
+                                                              @Param("modifiedTo") LocalDateTime modifiedTo,
+                                                              Pageable pageable);
+/*
 
     @Query("SELECT m FROM MarvelCharacter m " +
             "WHERE m.modified >= :modifiedFrom AND m.modified <= :modifiedTo " +
@@ -41,5 +43,6 @@ public interface CharacterRepository extends JpaRepository<MarvelCharacter, Long
     Page<MarvelCharacter> findAllByModifiedDateOrderByModifiedDesc(@Param("modifiedFrom") LocalDateTime modifiedFrom,
                                                                @Param("modifiedTo") LocalDateTime modifiedTo,
                                                                Pageable pageable);
+*/
 
 }

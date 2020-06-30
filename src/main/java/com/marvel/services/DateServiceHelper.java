@@ -12,7 +12,7 @@ public interface DateServiceHelper {
                 .parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    default String parseLocalDateTimeFormatToString(LocalDateTime dateTime) {
+    default String parseLocalDateTimeFormatToString(LocalDateTime dateTime){
 
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 

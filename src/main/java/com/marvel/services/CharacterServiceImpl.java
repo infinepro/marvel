@@ -7,12 +7,14 @@ import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.api.v1.model.ResponseDataContainerModel;
 import com.marvel.domain.MarvelCharacter;
+import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.repositories.CharacterRepository;
 import com.marvel.repositories.ComicRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,35 +43,23 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
 
     private Page<MarvelCharacter> getCharactersByModel(QueryCharacterModel model) {
 
-        Pageable pageable = PageRequest.of(model.getNumberPage(), model.getPageSize());
-        Page<MarvelCharacter> characters;
+        Sort sort;
 
-        switch (model.getOrderBy()) {
-            case "name":
-                characters = characterRepository.findAllByModifiedDateOrderByNameAsc(
-                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
-                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
-                        pageable);
-                break;
-            case "-name":
-                characters = characterRepository.findAllByModifiedDateOrderByNameDesc(
-                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
-                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
-                        pageable);
-                break;
-            case "modified":
-                characters = characterRepository.findAllByModifiedDateOrderByModifiedAsc(
-                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
-                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
-                        pageable);
-                break;
-            default:
-                characters = characterRepository.findAllByModifiedDateOrderByModifiedDesc(
-                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
-                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
-                        pageable);
-                break;
-        }
+        if (model.getOrderBy().equals("name"))
+            sort = Sort.by("name").ascending();
+        else if (model.getOrderBy().equals("-name"))
+            sort = Sort.by("name").descending();
+        else if (model.getOrderBy().equals("modified"))
+            sort = Sort.by("modified").ascending();
+        else
+            sort = Sort.by("modified").descending();
+
+        Pageable pageable = PageRequest.of(model.getNumberPage(), model.getPageSize(), sort);
+
+        Page<MarvelCharacter> characters = characterRepository.findAllByModifiedDateOrderByNameAsc(
+                parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
+                parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
+                pageable);
 
         return characters;
     }
@@ -77,9 +67,9 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
     @Override
     public ResponseDataContainerModel<MarvelCharacterDTO> getCharacters(QueryCharacterModel model) {
 
-
         List<MarvelCharacterDTO> charactersDto = getCharactersByModel(model)
                 .stream()
+                .peek(System.out::println)
                 .map(characterToDtoConverter::convert)
                 .collect(Collectors.toList());
 
@@ -97,7 +87,7 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
         if (optionalCharacter.isPresent())
             return characterToDtoConverter.convert(optionalCharacter.get());
         else
-            return new MarvelCharacterDTO();
+            throw new CharacterNotFoundException("Character with id:" + id + " not found");
 
     }
 

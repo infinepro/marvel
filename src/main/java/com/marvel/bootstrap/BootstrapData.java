@@ -15,9 +15,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Component
@@ -44,10 +42,20 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         log.warn("load data success");
     }
 
-    private Set<MarvelCharacter> loadCharacters() {
-        Set<MarvelCharacter> characters = new HashSet<>();
+    private List<MarvelCharacter> loadCharactersTwo() {
+        List<MarvelCharacter> characters = new ArrayList<>();
+
+        characters.add(characterRepository.findByName("Thanos").get());
+        characters.add(characterRepository.findByName("Hulk").get());
+
+        return characters;
+    }
+
+    private List<MarvelCharacter> loadCharactersThree() {
+        List<MarvelCharacter> characters = new ArrayList<>();
 
         characters.add(new MarvelCharacter()
+                .setId(1L)
                 .setName("Thanos")
                 .setDescription("super strong villain")
                 .setModified(nowDateTime)
@@ -55,6 +63,15 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
                 .setFullImage(new Byte[]{1, 4, 72}));
 
         characters.add(new MarvelCharacter()
+                .setId(2L)
+                .setName("Red Hulk")
+                .setDescription("red NEGODIAY")
+                .setModified(nowDateTime)
+                .setThumbnail(new Byte[]{1, 4, 3})
+                .setFullImage(new Byte[]{4, 4, 67}));
+
+        characters.add(new MarvelCharacter()
+                .setId(3L)
                 .setName("Hulk")
                 .setDescription("green hero")
                 .setModified(nowDateTime)
@@ -67,6 +84,11 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     }
 
     private void loadComics() {
+
+        List<MarvelCharacter> charactersTwo = loadCharactersThree();
+        List<MarvelCharacter> charactersOne = loadCharactersTwo();
+
+
         List<ComicDate> dates = new ArrayList<ComicDate>() {{
             add(new ComicDate().setType("hard").setDate(LocalDateTime.now()));
             add(new ComicDate().setType("very hard").setDate(LocalDateTime.now()));
@@ -79,6 +101,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         }};
 
         Comic newComic = new Comic()
+                .setId(1L)
                 .setTitle("this is new comic")
                 .setDescription("just nice comic")
                 .setModified(prevDateTime)
@@ -88,8 +111,25 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
                 .setFullImage(new Byte[]{1, 4, 72})
                 .setDates(dates)
                 .setPrices(prices)
-                .setMarvelCharacters(loadCharacters());
+                .setMarvelCharacters(charactersOne);
 
-        comicRepository.save(newComic);
+        Comic oldComic = new Comic()
+                .setId(2L)
+                .setTitle("this is old comic")
+                .setDescription("normal comic")
+                .setModified(prevDateTime)
+                .setFormat("A3")
+                .setPageCount(30)
+                .setThumbnail(new Byte[]{2, 4, 3})
+                .setFullImage(new Byte[]{1, 4, 72})
+                .setDates(dates)
+                .setPrices(prices)
+                .setMarvelCharacters(charactersTwo);
+
+        List<Comic> list = new ArrayList<>();
+        list.add(newComic);
+        list.add(oldComic);
+
+        comicRepository.saveAll(list);
     }
 }

@@ -6,7 +6,10 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -44,7 +47,7 @@ public class Comic {
             name = "comic_marvel_characters",
             joinColumns = @JoinColumn(name = "comic_id"),
             inverseJoinColumns = @JoinColumn(name = "marvel_characters_id"))
-    private Set<MarvelCharacter> marvelCharacters = new HashSet<>();
+    private List<MarvelCharacter> marvelCharacters = new ArrayList<>();
 
     public void setComicDate(ComicDate comicDate) {
         if (comicDate != null) {

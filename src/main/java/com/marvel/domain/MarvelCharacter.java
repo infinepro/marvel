@@ -6,10 +6,10 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -38,7 +38,7 @@ public class MarvelCharacter {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    private Set<Comic> comics = new HashSet<>();
+    private List<Comic> comics = new ArrayList<>();
 
     public void setComic(Comic comic) {
         if (comic != null) {
@@ -70,8 +70,6 @@ public class MarvelCharacter {
                 ", description='" + description + '\'' +
                 ", modified=" + modified +
                 ", thumbnail=" + Arrays.toString(thumbnail) +
-                ", fullImage=" + Arrays.toString(fullImage) +
-                ", comicList=" + comics +
-                '}';
+                ", fullImage=" + Arrays.toString(fullImage) + "} + \n";
     }
 }
