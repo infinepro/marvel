@@ -53,7 +53,7 @@ public class CharacterController {
             @RequestParam(required = false) String modified_from,
             @RequestParam(required = false) String modified_to) {
 
-        log.info(order_by);
+        log.info(modified_to);
         QueryCharacterModel model = modelService
                 .setParametersIntoModel(number_page, page_size, order_by, modified_from, modified_to);
 

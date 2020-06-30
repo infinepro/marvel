@@ -6,7 +6,7 @@ import com.marvel.domain.ComicPrice;
 import com.marvel.domain.MarvelCharacter;
 import com.marvel.repositories.CharacterRepository;
 import com.marvel.repositories.ComicRepository;
-import com.marvel.services.DateServiceHelper;
+import com.marvel.services.DateHelperService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>, DateServiceHelper {
+public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>, DateHelperService {
 
     private final LocalDateTime nowDateTime;
     private final LocalDateTime prevDateTime;

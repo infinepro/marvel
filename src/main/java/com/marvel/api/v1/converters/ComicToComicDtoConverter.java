@@ -5,17 +5,16 @@ import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.ComicDateDTO;
 import com.marvel.api.v1.model.ComicPriceDTO;
 import com.marvel.domain.Comic;
-import com.marvel.services.DateServiceHelper;
+import com.marvel.services.DateHelperService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class ComicToComicDtoConverter implements Converter<Comic, ComicDTO>, DateServiceHelper {
+public class ComicToComicDtoConverter implements Converter<Comic, ComicDTO>, DateHelperService {
 
     private final CharacterToCharacterDtoConverter characterToCharacterDtoConverter;
     private final ComicDateToComicDateDtoConverter comicDateToComicDateDtoConverter;

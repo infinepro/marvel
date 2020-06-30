@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class CharacterServiceImpl implements CharacterService, DateServiceHelper {
+public class CharacterServiceImpl implements CharacterService, DateHelperService {
 
     private final CharacterRepository characterRepository;
     private final CharacterToCharacterDtoConverter characterToDtoConverter;
