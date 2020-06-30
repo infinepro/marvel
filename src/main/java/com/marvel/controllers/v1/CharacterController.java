@@ -1,7 +1,7 @@
 package com.marvel.controllers.v1;
 
-import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.ComicDTO;
+import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.api.v1.model.ResponseDataContainerModel;
 import com.marvel.services.CharacterService;
@@ -26,8 +26,14 @@ public class CharacterController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseDataContainerModel<MarvelCharacterDTO> getCharacters33() {
 
-        QueryCharacterModel model = new QueryCharacterModel();
-
+        QueryCharacterModel model = new QueryCharacterModel()
+                //.setName("Hulk")
+                .setComicId(1L)
+                .setNumberPage(0)
+                .setPageSize(2)
+                .setOrderBy("name")
+                .setModifiedFrom("2020-06-30 09:47:37")
+                .setModifiedTo("2020-06-30 15:47:37");
 
         return characterService.getCharacters(model);
     }

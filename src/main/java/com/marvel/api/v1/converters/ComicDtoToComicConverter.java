@@ -56,7 +56,7 @@ public class ComicDtoToComicConverter implements Converter<ComicDTO, Comic>, Dat
                 .setId(Long.valueOf(comicDto.getId()))
                 .setTitle(comicDto.getTitle())
                 .setDescription(comicDto.getDescription())
-                .setModified(parseStringDateFormatToLong(comicDto.getModified()))
+                .setModified(parseStringDateFormatToLocalDateTime(comicDto.getModified()))
                 .setFormat(comicDto.getFormat())
                 .setPageCount(comicDto.getPageCount())
                 .setThumbnail(comicDto.getThumbnail())

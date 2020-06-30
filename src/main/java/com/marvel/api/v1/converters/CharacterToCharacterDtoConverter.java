@@ -22,7 +22,7 @@ public class CharacterToCharacterDtoConverter implements Converter<MarvelCharact
                 .setId(character.getId().toString())
                 .setName(character.getName())
                 .setDescription(character.getDescription())
-                .setModified(parseLongDateFormatToString(character.getModified()))
+                .setModified(parseLocalDateTimeFormatToString(character.getModified()))
                 .setThumbnail(character.getThumbnail())
                 .setFullImage(character.getFullImage());
 

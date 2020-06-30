@@ -18,7 +18,7 @@ public class ComicDateToComicDateDtoConverter implements Converter<ComicDate, Co
 
         return new ComicDateDTO()
                 .setId(comicDate.getId().toString())
-                .setDate(parseLongDateFormatToString(comicDate.getDate()))
+                .setDate(parseLocalDateTimeFormatToString(comicDate.getDate()))
                 .setType(comicDate.getType());
     }
 }

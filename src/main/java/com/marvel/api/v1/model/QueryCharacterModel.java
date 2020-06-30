@@ -7,8 +7,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class QueryCharacterModel {
 
-    private String Name;
-    private String modifiedSince;
+    private String modifiedFrom;
+    private String modifiedTo;
+    private Long comicId;
 
     //for sort
     private String orderBy;

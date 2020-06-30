@@ -2,14 +2,17 @@ package com.marvel.services;
 
 import com.marvel.api.v1.converters.CharacterToCharacterDtoConverter;
 import com.marvel.api.v1.converters.ComicToComicDtoConverter;
-import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.ComicDTO;
+import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.api.v1.model.ResponseDataContainerModel;
 import com.marvel.domain.MarvelCharacter;
 import com.marvel.repositories.CharacterRepository;
 import com.marvel.repositories.ComicRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,38 +39,55 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
         this.comicRepository = comicRepository;
     }
 
+    private Page<MarvelCharacter> getCharactersByModel(QueryCharacterModel model) {
+
+        Pageable pageable = PageRequest.of(model.getNumberPage(), model.getPageSize());
+        Page<MarvelCharacter> characters;
+
+        switch (model.getOrderBy()) {
+            case "name":
+                characters = characterRepository.findAllByModifiedDateOrderByNameAsc(
+                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
+                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
+                        pageable);
+                break;
+            case "-name":
+                characters = characterRepository.findAllByModifiedDateOrderByNameDesc(
+                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
+                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
+                        pageable);
+                break;
+            case "modified":
+                characters = characterRepository.findAllByModifiedDateOrderByModifiedAsc(
+                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
+                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
+                        pageable);
+                break;
+            default:
+                characters = characterRepository.findAllByModifiedDateOrderByModifiedDesc(
+                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
+                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
+                        pageable);
+                break;
+        }
+
+        return characters;
+    }
+
     @Override
     public ResponseDataContainerModel<MarvelCharacterDTO> getCharacters(QueryCharacterModel model) {
 
-        /*//create sort
-        if (model.getOrderBy() == null || model.getOrderBy().equals("name") || model.getOrderBy().isEmpty())
 
-        else if (model.getOrderBy().equals("-name"))
+        List<MarvelCharacterDTO> charactersDto = getCharactersByModel(model)
+                .stream()
+                .map(characterToDtoConverter::convert)
+                .collect(Collectors.toList());
 
-        else if (model.getOrderBy().equals("modified"))
-
-        else
-
-        if (model.getName() == null || model.getName().isEmpty()) {
-            characters = characterRepository
-                    .findAllByModifiedAfter(modifiedSince, pageable)
-                    .stream()
-                    .map(characterToDtoConverter::convert)
-                    .collect(Collectors.toList());
-        } else {
-            characters = characterRepository
-                    .findAllByNameAndModifiedAfter(model.getName(), modifiedSince, pageable)
-                    .stream()
-                    .map(characterToDtoConverter::convert)
-                    .collect(Collectors.toList());
-        }
-
-        return new ResponseDataContainerModel<CharacterDTO>()
-                .setResults(characters)
-                .setCount(characters.size())
+        return new ResponseDataContainerModel<MarvelCharacterDTO>()
+                .setResults(charactersDto)
+                .setCount(charactersDto.size())
                 .setNumberPage(model.getNumberPage())
-                .setPageSize(model.getPageSize());*/
-        return null;
+                .setPageSize(model.getPageSize());
     }
 
     @Override

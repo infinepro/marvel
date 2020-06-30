@@ -1,9 +1,9 @@
 package com.marvel.bootstrap;
 
-import com.marvel.domain.MarvelCharacter;
 import com.marvel.domain.Comic;
 import com.marvel.domain.ComicDate;
 import com.marvel.domain.ComicPrice;
+import com.marvel.domain.MarvelCharacter;
 import com.marvel.repositories.CharacterRepository;
 import com.marvel.repositories.ComicRepository;
 import com.marvel.services.DateServiceHelper;
@@ -39,7 +39,8 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         log.warn("start loading data");
-        loadComics();
+        if (comicRepository.count() == 0)
+            loadComics();
         log.warn("load data success");
     }
 
