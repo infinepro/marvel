@@ -81,24 +81,36 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     }
 
     @Override
-    public MarvelCharacterDTO getCharacterById(Long id) {
+    public ResponseDataContainerModel<MarvelCharacterDTO> getCharacterById(Long id) {
         Optional<MarvelCharacter> optionalCharacter = characterRepository.findById(id);
 
-        if (optionalCharacter.isPresent())
-            return characterToDtoConverter.convert(optionalCharacter.get());
-        else
+        if (optionalCharacter.isPresent()) {
+            List<MarvelCharacterDTO> list = new ArrayList<>();
+            list.add(characterToDtoConverter.convert(optionalCharacter.get()));
+            ResponseDataContainerModel<MarvelCharacterDTO> model = new ResponseDataContainerModel<>();
+            model.setResults(list);
+
+            return model;
+        } else
             throw new CharacterNotFoundException("Character with id:" + id + " not found");
 
     }
 
     @Override
-    public List<ComicDTO> getComicsByCharacterId(Long characterId) {
+    public ResponseDataContainerModel<ComicDTO> getComicsByCharacterId(Long characterId) {
         Optional<MarvelCharacter> optionalCharacter = characterRepository.findById(characterId);
 
-        return optionalCharacter.map(character -> character.getComics()
-                .stream()
-                .map(comicToDtoConverter::convert)
-                .collect(Collectors.toList())).orElseGet(ArrayList::new);
+        if (optionalCharacter.isPresent()) {
+            ResponseDataContainerModel<ComicDTO> model = new ResponseDataContainerModel<>();
+            model.setResults(
+                    optionalCharacter.get().getComics()
+                            .stream()
+                            .map(comicToDtoConverter::convert)
+                            .collect(Collectors.toList()));
+
+            return model;
+        } else
+            throw new CharacterNotFoundException("Character with id:" + characterId + " not found");
     }
 
 }

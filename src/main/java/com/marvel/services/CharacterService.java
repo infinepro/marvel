@@ -11,8 +11,8 @@ public interface CharacterService {
 
     ResponseDataContainerModel<MarvelCharacterDTO> getCharacters(QueryCharacterModel model);
 
-    MarvelCharacterDTO getCharacterById(Long id);
+    ResponseDataContainerModel<MarvelCharacterDTO> getCharacterById(Long id);
 
-    List<ComicDTO> getComicsByCharacterId(Long characterId);
+    ResponseDataContainerModel<ComicDTO> getComicsByCharacterId(Long characterId);
 
 }

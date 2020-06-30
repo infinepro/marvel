@@ -1,9 +1,6 @@
 package com.marvel.controllers.v1;
 
-import com.marvel.api.v1.model.ComicDTO;
-import com.marvel.api.v1.model.MarvelCharacterDTO;
-import com.marvel.api.v1.model.QueryCharacterModel;
-import com.marvel.api.v1.model.ResponseDataContainerModel;
+import com.marvel.api.v1.model.*;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.services.CharacterService;
@@ -12,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Slf4j
@@ -46,7 +44,7 @@ public class CharacterController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDataContainerModel<MarvelCharacterDTO> getCharacters(
+    public CharacterDataWrapper<MarvelCharacterDTO> getCharacters(
             @RequestParam(required = false) String number_page,
             @RequestParam(required = false) String page_size,
             @RequestParam(required = false) String order_by,
@@ -57,36 +55,55 @@ public class CharacterController {
         QueryCharacterModel model = modelService
                 .setParametersIntoModel(number_page, page_size, order_by, modified_from, modified_to);
 
-        return characterService.getCharacters(model);
+        CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
+        dataWrapper.setData(characterService.getCharacters(model));
+
+        return dataWrapper;
     }
 
     @GetMapping("/{characterId}")
     @ResponseStatus(HttpStatus.OK)
-    public MarvelCharacterDTO getCharacter(@PathVariable String characterId) {
+    public CharacterDataWrapper<MarvelCharacterDTO> getCharacter(@PathVariable String characterId) {
 
-        return characterService.getCharacterById(Long.valueOf(characterId));
+        CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
+        dataWrapper.setData(characterService.getCharacterById(Long.valueOf(characterId)));
+
+        return dataWrapper;
     }
 
     @GetMapping("{characterId}/comics")
     @ResponseStatus(HttpStatus.OK)
-    public List<ComicDTO> getComicsByCharacterId(@PathVariable String characterId) {
+    public CharacterDataWrapper<ComicDTO> getComicsByCharacterId(@PathVariable String characterId) {
 
-        return characterService.getComicsByCharacterId(Long.valueOf(characterId));
+        CharacterDataWrapper<ComicDTO> dataWrapper = new CharacterDataWrapper<>();
+        dataWrapper.setData(characterService.getComicsByCharacterId(Long.valueOf(characterId)));
+
+        return dataWrapper;
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(CharacterNotFoundException.class)
-    public String handleNotFound(Exception exception) {
+    public CharacterDataWrapper<Object> handleNotFound(Exception exception) {
         log.error(exception.getMessage());
 
-        return exception.getMessage();
+        CharacterDataWrapper<Object> dataWrapper = new CharacterDataWrapper<>();
+
+        dataWrapper.setCode(HttpStatus.NOT_FOUND.value());
+        dataWrapper.setStatus(exception.getMessage());
+
+        return dataWrapper;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(BadParametersException.class)
-    public String handleBadParameters(Exception exception) {
+    @ExceptionHandler({BadParametersException.class, DateTimeParseException.class})
+    public CharacterDataWrapper<Object> handleBadParameters(Exception exception) {
         log.error(exception.getMessage());
 
-        return exception.getMessage();
+        CharacterDataWrapper<Object> dataWrapper = new CharacterDataWrapper<>();
+
+        dataWrapper.setCode(HttpStatus.BAD_REQUEST.value());
+        dataWrapper.setStatus(exception.getMessage());
+
+        return dataWrapper;
     }
 }

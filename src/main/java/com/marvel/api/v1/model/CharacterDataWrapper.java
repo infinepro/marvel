@@ -13,4 +13,9 @@ public class CharacterDataWrapper<T> {
     private Integer code;
     private String status;
     private ResponseDataContainerModel<T> data;
+
+    public CharacterDataWrapper() {
+        this.code = 200;
+        this.status = "all right";
+    }
 }
