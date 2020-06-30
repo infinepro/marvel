@@ -12,8 +12,10 @@ public class ModelService {
     private final String END_TIME = "2900-01-01 00:00:00";
     private final Integer DEFAULT_PAGE_SIZE = 15;
     private final Integer DEFAULT_NUMBER_PAGE = 0;
+    public static final Long MINUS_ONE = -1L;
 
-    public QueryCharacterModel setParametersIntoModel(String numberPage,
+    public QueryCharacterModel setParametersIntoModel(String comicId,
+                                                      String numberPage,
                                                       String pageSize,
                                                       String orderBy,
                                                       String modifiedFrom,
@@ -22,6 +24,11 @@ public class ModelService {
         QueryCharacterModel model = new QueryCharacterModel();
 
         try {
+            if (comicId != null)
+                model.setComicId(Long.valueOf(comicId));
+            else
+                model.setComicId(MINUS_ONE);
+
             if (numberPage != null)
                 model.setNumberPage(Integer.valueOf(numberPage));
             else

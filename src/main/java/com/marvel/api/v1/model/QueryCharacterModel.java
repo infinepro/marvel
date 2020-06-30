@@ -13,6 +13,7 @@ public class QueryCharacterModel {
     private final Integer DEFAULT_PAGE_SIZE = 25;
     private final Integer DEFAULT_NUMBER_PAGE = 0;*/
 
+    private Long comicId;
     private Integer numberPage;
     private Integer pageSize;
     private String modifiedFrom;

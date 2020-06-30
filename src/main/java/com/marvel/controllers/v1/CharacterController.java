@@ -2,7 +2,7 @@ package com.marvel.controllers.v1;
 
 import com.marvel.api.v1.model.*;
 import com.marvel.exceptions.BadParametersException;
-import com.marvel.exceptions.CharacterNotFoundException;
+import com.marvel.exceptions.ComicNotFoundException;
 import com.marvel.services.CharacterService;
 import com.marvel.services.ModelService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeParseException;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -45,6 +44,7 @@ public class CharacterController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public CharacterDataWrapper<MarvelCharacterDTO> getCharacters(
+            @RequestParam(required = false) String comic_id,
             @RequestParam(required = false) String number_page,
             @RequestParam(required = false) String page_size,
             @RequestParam(required = false) String order_by,
@@ -53,7 +53,7 @@ public class CharacterController {
 
         log.info(modified_to);
         QueryCharacterModel model = modelService
-                .setParametersIntoModel(number_page, page_size, order_by, modified_from, modified_to);
+                .setParametersIntoModel(comic_id, number_page, page_size, order_by, modified_from, modified_to);
 
         CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
         dataWrapper.setData(characterService.getCharacters(model));
@@ -84,7 +84,7 @@ public class CharacterController {
 
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(CharacterNotFoundException.class)
+    @ExceptionHandler(ComicNotFoundException.class)
     public CharacterDataWrapper<Object> handleNotFound(Exception exception) {
         log.error(exception.getMessage());
 

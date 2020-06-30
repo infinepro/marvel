@@ -9,6 +9,7 @@ import com.marvel.api.v1.model.ResponseDataContainerModel;
 import com.marvel.domain.MarvelCharacter;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
+import com.marvel.exceptions.ComicNotFoundException;
 import com.marvel.repositories.CharacterRepository;
 import com.marvel.repositories.ComicRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +18,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.marvel.services.ModelService.MINUS_ONE;
 
 @Slf4j
 @Service
@@ -60,10 +64,18 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
 
         Page<MarvelCharacter> characters;
         try {
-            characters = characterRepository.findAllByModifiedDateOrderByNameAsc(
-                    parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
-                    parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
-                    pageable);
+            if (model.getComicId().equals(MINUS_ONE)) {
+                characters = characterRepository.findAllByModifiedDateOrdered(
+                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
+                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
+                        pageable);
+            } else {
+                characters = characterRepository.findAllByComicIdAndModifiedDateOrdered(
+                        model.getComicId(),
+                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
+                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
+                        pageable);
+            }
         } catch (DateTimeParseException e) {
             throw new BadParametersException("Bad parameter, the date must be in the format: " + DATE_FORMAT);
         }
@@ -72,6 +84,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     }
 
     @Override
+    @Transactional
     public ResponseDataContainerModel<MarvelCharacterDTO> getCharacters(QueryCharacterModel model) {
 
         List<MarvelCharacterDTO> charactersDto = getCharactersByModel(model)
@@ -79,6 +92,9 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
                 .peek(System.out::println)
                 .map(characterToDtoConverter::convert)
                 .collect(Collectors.toList());
+
+        if (charactersDto.isEmpty())
+            throw new CharacterNotFoundException("Character from comic with ID:" + model.getComicId() + " not found");
 
         return new ResponseDataContainerModel<MarvelCharacterDTO>()
                 .setResults(charactersDto)
@@ -88,6 +104,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     }
 
     @Override
+    @Transactional
     public ResponseDataContainerModel<MarvelCharacterDTO> getCharacterById(Long id) {
         Optional<MarvelCharacter> optionalCharacter = characterRepository.findById(id);
 
@@ -99,11 +116,12 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
 
             return model;
         } else
-            throw new CharacterNotFoundException("Character with id:" + id + " not found");
+            throw new ComicNotFoundException("Character with id:" + id + " not found");
 
     }
 
     @Override
+    @Transactional
     public ResponseDataContainerModel<ComicDTO> getComicsByCharacterId(Long characterId) {
         Optional<MarvelCharacter> optionalCharacter = characterRepository.findById(characterId);
 
@@ -117,7 +135,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
 
             return model;
         } else
-            throw new CharacterNotFoundException("Character with id:" + characterId + " not found");
+            throw new ComicNotFoundException("Character with id:" + characterId + " not found");
     }
 
 }

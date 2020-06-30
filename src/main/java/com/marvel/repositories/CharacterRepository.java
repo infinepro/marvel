@@ -18,31 +18,15 @@ public interface CharacterRepository extends JpaRepository<MarvelCharacter, Long
 
     @Query("SELECT m FROM MarvelCharacter m " +
             "WHERE m.modified >= :modifiedFrom AND m.modified <= :modifiedTo ")
-    Page<MarvelCharacter> findAllByModifiedDateOrderByNameAsc(@Param("modifiedFrom") LocalDateTime modifiedFrom,
-                                                              @Param("modifiedTo") LocalDateTime modifiedTo,
-                                                              Pageable pageable);
-/*
+    Page<MarvelCharacter> findAllByModifiedDateOrdered(@Param("modifiedFrom") LocalDateTime modifiedFrom,
+                                                       @Param("modifiedTo") LocalDateTime modifiedTo,
+                                                       Pageable pageable);
 
-    @Query("SELECT m FROM MarvelCharacter m " +
-            "WHERE m.modified >= :modifiedFrom AND m.modified <= :modifiedTo " +
-            "ORDER BY m.name desc")
-    Page<MarvelCharacter> findAllByModifiedDateOrderByNameDesc(@Param("modifiedFrom") LocalDateTime modifiedFrom,
-                                                           @Param("modifiedTo") LocalDateTime modifiedTo,
-                                                           Pageable pageable);
-
-    @Query("SELECT m FROM MarvelCharacter m " +
-            "WHERE m.modified >= :modifiedFrom AND m.modified <= :modifiedTo " +
-            "ORDER BY m.modified ASC")
-    Page<MarvelCharacter> findAllByModifiedDateOrderByModifiedAsc(@Param("modifiedFrom") LocalDateTime modifiedFrom,
-                                                              @Param("modifiedTo") LocalDateTime modifiedTo,
-                                                              Pageable pageable);
-
-    @Query("SELECT m FROM MarvelCharacter m " +
-            "WHERE m.modified >= :modifiedFrom AND m.modified <= :modifiedTo " +
-            "ORDER BY m.modified desc")
-    Page<MarvelCharacter> findAllByModifiedDateOrderByModifiedDesc(@Param("modifiedFrom") LocalDateTime modifiedFrom,
-                                                               @Param("modifiedTo") LocalDateTime modifiedTo,
-                                                               Pageable pageable);
-*/
+    @Query("SELECT m FROM MarvelCharacter m LEFT JOIN m.comics c " +
+            "WHERE c.id = :comicId AND m.modified >= :modifiedFrom AND m.modified <= :modifiedTo ")
+    Page<MarvelCharacter> findAllByComicIdAndModifiedDateOrdered(@Param("comicId") Long id,
+                                                                 @Param("modifiedFrom") LocalDateTime modifiedFrom,
+                                                                 @Param("modifiedTo") LocalDateTime modifiedTo,
+                                                                 Pageable pageable);
 
 }
