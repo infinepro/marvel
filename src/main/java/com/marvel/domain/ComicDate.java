@@ -22,6 +22,6 @@ public class ComicDate {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime date;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Comic comic;
 }

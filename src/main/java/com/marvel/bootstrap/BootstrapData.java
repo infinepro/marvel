@@ -60,6 +60,8 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
                 .setThumbnail(new Byte[]{1, 4, 3})
                 .setFullImage(new Byte[]{4, 4, 67}));
 
+        characterRepository.saveAll(characters);
+
         return characters;
     }
 

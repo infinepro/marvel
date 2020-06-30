@@ -20,6 +20,6 @@ public class ComicPrice {
     private String type;
     private BigDecimal price;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Comic comic;
 }
