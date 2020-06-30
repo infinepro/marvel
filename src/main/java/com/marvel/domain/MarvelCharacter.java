@@ -6,16 +6,16 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
 @Accessors(chain = true)
 @Entity
-public class Character {
+public class MarvelCharacter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,8 @@ public class Character {
 
     private String name;
     private String description;
+
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime modified;
 
     @Lob
@@ -31,24 +33,24 @@ public class Character {
     @Lob
     private Byte[] fullImage;
 
-    @ManyToMany
-    @JoinTable(
-            name = "character_comic",
-            joinColumns = @JoinColumn(name = "character_id"),
-            inverseJoinColumns = @JoinColumn(name = "comic_id"))
-    private List<Comic> comicList = new ArrayList<>();
+    @ManyToMany(mappedBy = "marvelCharacters",
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    private Set<Comic> comics = new HashSet<>();
 
-    public void addComic(Comic comic) {
+    public void setComic(Comic comic) {
         if (comic != null) {
-            this.comicList.add(comic);
+            this.comics.add(comic);
         }
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Character)) return false;
-        Character character = (Character) o;
+        if (!(o instanceof MarvelCharacter)) return false;
+        MarvelCharacter character = (MarvelCharacter) o;
         return Objects.equals(id, character.id) &&
                 Objects.equals(name, character.name) &&
                 Objects.equals(description, character.description) &&
@@ -69,7 +71,7 @@ public class Character {
                 ", modified=" + modified +
                 ", thumbnail=" + Arrays.toString(thumbnail) +
                 ", fullImage=" + Arrays.toString(fullImage) +
-                ", comicList=" + comicList +
+                ", comicList=" + comics +
                 '}';
     }
 }

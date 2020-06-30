@@ -12,7 +12,7 @@ import javax.validation.constraints.Past;
 @Setter
 @NoArgsConstructor
 @Accessors(chain = true)
-public class CharacterDTO {
+public class MarvelCharacterDTO {
 
     private String id;
 

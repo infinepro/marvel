@@ -2,16 +2,14 @@ package com.marvel.services;
 
 import com.marvel.api.v1.converters.CharacterToCharacterDtoConverter;
 import com.marvel.api.v1.converters.ComicToComicDtoConverter;
-import com.marvel.api.v1.model.CharacterDTO;
+import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.api.v1.model.ResponseDataContainerModel;
-import com.marvel.domain.Character;
+import com.marvel.domain.MarvelCharacter;
 import com.marvel.repositories.CharacterRepository;
 import com.marvel.repositories.ComicRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,7 +37,7 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
     }
 
     @Override
-    public ResponseDataContainerModel<CharacterDTO> getCharacters(QueryCharacterModel model) {
+    public ResponseDataContainerModel<MarvelCharacterDTO> getCharacters(QueryCharacterModel model) {
 
         /*//create sort
         if (model.getOrderBy() == null || model.getOrderBy().equals("name") || model.getOrderBy().isEmpty())
@@ -73,21 +71,21 @@ public class CharacterServiceImpl implements CharacterService, DateServiceHelper
     }
 
     @Override
-    public CharacterDTO getCharacterById(Long id) {
-        Optional<Character> optionalCharacter = characterRepository.findById(id);
+    public MarvelCharacterDTO getCharacterById(Long id) {
+        Optional<MarvelCharacter> optionalCharacter = characterRepository.findById(id);
 
         if (optionalCharacter.isPresent())
             return characterToDtoConverter.convert(optionalCharacter.get());
         else
-            return new CharacterDTO();
+            return new MarvelCharacterDTO();
 
     }
 
     @Override
     public List<ComicDTO> getComicsByCharacterId(Long characterId) {
-        Optional<Character> optionalCharacter = characterRepository.findById(characterId);
+        Optional<MarvelCharacter> optionalCharacter = characterRepository.findById(characterId);
 
-        return optionalCharacter.map(character -> character.getComicList()
+        return optionalCharacter.map(character -> character.getComics()
                 .stream()
                 .map(comicToDtoConverter::convert)
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);

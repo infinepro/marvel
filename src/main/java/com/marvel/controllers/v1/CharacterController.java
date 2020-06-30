@@ -1,6 +1,6 @@
 package com.marvel.controllers.v1;
 
-import com.marvel.api.v1.model.CharacterDTO;
+import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.api.v1.model.ResponseDataContainerModel;
@@ -24,7 +24,7 @@ public class CharacterController {
 
     @GetMapping("/characters33")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDataContainerModel<CharacterDTO> getCharacters33() {
+    public ResponseDataContainerModel<MarvelCharacterDTO> getCharacters33() {
 
         QueryCharacterModel model = new QueryCharacterModel();
 
@@ -35,14 +35,14 @@ public class CharacterController {
 
     @GetMapping("/characters")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDataContainerModel<CharacterDTO> getCharacters(QueryCharacterModel model) {
+    public ResponseDataContainerModel<MarvelCharacterDTO> getCharacters(QueryCharacterModel model) {
 
         return characterService.getCharacters(model);
     }
 
     @GetMapping("/characters/{characterId}")
     @ResponseStatus(HttpStatus.OK)
-    public CharacterDTO getCharacter(@PathVariable String characterId) {
+    public MarvelCharacterDTO getCharacter(@PathVariable String characterId) {
 
         return characterService.getCharacterById(Long.valueOf(characterId));
     }

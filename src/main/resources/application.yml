@@ -1,15 +1,15 @@
-# docker run -d -p 3399:3399 -v ~/Documents/java/marvel/dockerfiles/mysql/etc/mysql/:/etc/mysql/conf.d -v ~/Documents/java/marvel/dockerfiles/mysql/var/lib/mysql:/var/lib/mysql --name mysql-developer-image -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=sfg_dev -e MYSQL_USER=sfg_dev_user -e MYSQL_PASSWORD=123 mysql:latest
+# docker run -d -p 3306:3306 -v ~/Documents/java/marvel/dockerfiles/mysql/etc/mysql/:/etc/mysql/conf.d -v ~/Documents/java/marvel/dockerfiles/mysql/var/lib/mysql:/var/lib/mysql --name mysql-developer-image -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=sfg_dev -e MYSQL_USER=sfg_dev_user -e MYSQL_PASSWORD=123 mysql:latest
 
 spring:
   datasource:
     platform: mysql
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3399/sfg_dev
+    url: jdbc:mysql://127.0.0.1:3306/sfg_dev
     username: sfg_dev_user
     password: 123
-
-jpa:
-  hibernate:
-    ddl-auto: create-drop
+  jpa:
+    hibernate:
+      ddl-auto: create
     database-platform: org.hibernate.dialect.MySQL5Dialect
     show-sql: true
+    database: mysql

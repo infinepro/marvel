@@ -6,15 +6,12 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
 @Accessors(chain = true)
-@Entity
+@Entity(name = "comic")
 public class Comic {
 
     @Id
@@ -23,9 +20,12 @@ public class Comic {
 
     private String title;
     private String description;
-    private LocalDateTime modified;
+
     private String format;
     private Integer pageCount;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime modified;
 
     @Lob
     private Byte[] thumbnail;
@@ -39,24 +39,28 @@ public class Comic {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comic")
     private List<ComicPrice> prices = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "comicList")
-    private List<Character> characters = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "comic_marvel_characters",
+            joinColumns = @JoinColumn(name = "comic_id"),
+            inverseJoinColumns = @JoinColumn(name = "marvel_characters_id"))
+    private Set<MarvelCharacter> marvelCharacters = new HashSet<>();
 
-    public void addComicDate(ComicDate comicDate) {
+    public void setComicDate(ComicDate comicDate) {
         if (comicDate != null) {
             this.dates.add(comicDate);
         }
     }
 
-    public void addComicPrice(ComicPrice comicPrice) {
+    public void setComicPrice(ComicPrice comicPrice) {
         if (comicPrice != null) {
             this.prices.add(comicPrice);
         }
     }
 
-    public void addCharacter(Character character) {
+    public void setCharacter(MarvelCharacter character) {
         if (character != null) {
-            this.characters.add(character);
+            this.marvelCharacters.add(character);
         }
     }
 
@@ -91,7 +95,7 @@ public class Comic {
                 ", fullImage=" + Arrays.toString(fullImage) +
                 ", dates=" + dates +
                 ", prices=" + prices +
-                ", characters=" + characters +
+                ", characters=" + marvelCharacters +
                 '}';
     }
 }

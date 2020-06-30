@@ -18,8 +18,10 @@ public class ComicDate {
     private Long id;
 
     private String type;
+
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime date;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Comic comic;
 }

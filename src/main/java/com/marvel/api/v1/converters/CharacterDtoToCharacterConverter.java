@@ -1,22 +1,22 @@
 package com.marvel.api.v1.converters;
 
-import com.marvel.api.v1.model.CharacterDTO;
-import com.marvel.domain.Character;
+import com.marvel.api.v1.model.MarvelCharacterDTO;
+import com.marvel.domain.MarvelCharacter;
 import com.marvel.services.DateServiceHelper;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CharacterDtoToCharacterConverter implements Converter<CharacterDTO, Character>, DateServiceHelper {
+public class CharacterDtoToCharacterConverter implements Converter<MarvelCharacterDTO, MarvelCharacter>, DateServiceHelper {
 
     @Override
     @Nullable
-    public Character convert(CharacterDTO characterDto) {
+    public MarvelCharacter convert(MarvelCharacterDTO characterDto) {
         if (characterDto == null)
             return null;
 
-        final Character character = new Character();
+        final MarvelCharacter character = new MarvelCharacter();
 
         character
                 .setId(Long.valueOf(characterDto.getId()))

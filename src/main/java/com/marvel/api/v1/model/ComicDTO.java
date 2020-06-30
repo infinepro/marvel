@@ -10,7 +10,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -41,7 +43,7 @@ public class ComicDTO {
     private Byte[] fullImage;
     private List<ComicDateDTO> dates = new ArrayList<>();
     private List<ComicPriceDTO> prices = new ArrayList<>();
-    private List<CharacterDTO> characters = new ArrayList<>();
+    private Set<MarvelCharacterDTO> marvelCharacters = new HashSet<>();
 }
 
 
