@@ -29,21 +29,6 @@ public class CharacterController {
         this.modelService = modelService;
     }
 
-    @GetMapping("33")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseDataContainerModel<MarvelCharacterDTO> getCharacters33() {
-
-        QueryCharacterModel model = new QueryCharacterModel()
-                .setNumberPage(0)
-                .setPageSize(2)
-                .setOrderBy("name")
-                .setModifiedFrom("2020-06-30 09:47:37")
-                .setModifiedTo("2020-06-30 15:47:37");
-
-        return characterService.getCharacters(model);
-    }
-
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public CharacterDataWrapper<MarvelCharacterDTO> getCharacters(
@@ -66,7 +51,7 @@ public class CharacterController {
 
     @GetMapping("/{characterId}")
     @ResponseStatus(HttpStatus.OK)
-    public CharacterDataWrapper<MarvelCharacterDTO> getCharacter(@PathVariable String characterId) {
+    public CharacterDataWrapper<MarvelCharacterDTO> getCharacter(@PathVariable Long characterId) {
 
         CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
         dataWrapper.setData(characterService.getCharacterById(Long.valueOf(characterId)));
@@ -76,7 +61,7 @@ public class CharacterController {
 
     @GetMapping("/{characterId}/comics")
     @ResponseStatus(HttpStatus.OK)
-    public CharacterDataWrapper<ComicDTO> getComicsByCharacterId(@PathVariable String characterId) {
+    public CharacterDataWrapper<ComicDTO> getComicsByCharacterId(@PathVariable Long characterId) {
 
         CharacterDataWrapper<ComicDTO> dataWrapper = new CharacterDataWrapper<>();
         dataWrapper.setData(characterService.getComicsByCharacterId(Long.valueOf(characterId)));
@@ -104,7 +89,7 @@ public class CharacterController {
     @PutMapping("/{characterId}/update")
     @ResponseStatus(HttpStatus.CREATED)
     public CharacterDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model,
-                                                                          @PathVariable String characterId) {
+                                                                          @PathVariable Long characterId) {
 
         CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
 
@@ -137,7 +122,7 @@ public class CharacterController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({BadParametersException.class, DateTimeParseException.class})
+    @ExceptionHandler({BadParametersException.class, DateTimeParseException.class, NumberFormatException.class})
     public CharacterDataWrapper<Object> handleBadParameters(Exception exception) {
         log.error(exception.getMessage());
 

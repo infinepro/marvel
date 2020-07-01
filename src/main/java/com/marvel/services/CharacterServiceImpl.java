@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,12 +153,14 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     @Transactional
     public ResponseDataContainerModel<MarvelCharacterDTO> saveMarvelCharacterDto(MarvelCharacterDTO model) {
 
-        model.setId(null);
         try {
-            if (model == null)
+            if (model == null) {
                 throw new IllegalArgumentException();
+            }
 
-            MarvelCharacter result = characterRepository.save(dtoToCharacterConverter.convert(model));
+            model.setId(null);
+            MarvelCharacter result = characterRepository
+                    .saveAndFlush(dtoToCharacterConverter.convert(model).setModified(LocalDateTime.now()));
             ResponseDataContainerModel<MarvelCharacterDTO> responseModel = new ResponseDataContainerModel<>();
             responseModel.getResults().add(characterToDtoConverter.convert(result));
 
@@ -170,13 +173,13 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     @Override
     public ResponseDataContainerModel<MarvelCharacterDTO> updateMarvelCharacterById(Long characterId,
                                                                                     MarvelCharacterDTO model) {
-
         try {
             if (model == null)
                 throw new IllegalArgumentException();
 
             model.setId(characterId);
-            MarvelCharacter result = characterRepository.save(dtoToCharacterConverter.convert(model));
+            MarvelCharacter result = characterRepository
+                    .saveAndFlush(dtoToCharacterConverter.convert(model).setModified(LocalDateTime.now()));
             ResponseDataContainerModel<MarvelCharacterDTO> responseModel = new ResponseDataContainerModel<>();
             responseModel.getResults().add(characterToDtoConverter.convert(result));
 

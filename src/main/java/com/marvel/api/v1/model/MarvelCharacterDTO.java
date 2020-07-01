@@ -1,17 +1,17 @@
 package com.marvel.api.v1.model;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static com.marvel.services.DateHelperService.DATE_FORMAT;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Accessors(chain = true)
 public class MarvelCharacterDTO {
 
@@ -27,7 +27,7 @@ public class MarvelCharacterDTO {
     private Byte[] thumbnail;
     private Byte[] fullImage;
 
-    @Size(min = 1)
-    private List<Long> comicsId;
-
+    public MarvelCharacterDTO() {
+        this.modified = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT));
+    }
 }
