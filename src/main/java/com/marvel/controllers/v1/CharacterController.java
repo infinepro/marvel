@@ -120,19 +120,11 @@ public class CharacterController {
 
     @DeleteMapping("/{characterId}/delete")
     @ResponseStatus(HttpStatus.OK)
-    public CharacterDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@PathVariable Long characterId,
-                                                                          BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            log.error("deletion error");
-            log.error(bindingResult.getAllErrors().toString());
-            throw new BadParametersException();
-        }
-
+    public CharacterDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@PathVariable Long characterId) {
 
         CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
         dataWrapper.setCode(HttpStatus.OK.value());
-        dataWrapper.setStatus("character with id: " + dataWrapper.getData().getResults().get(0).getId() + " remote");
+        dataWrapper.setStatus("character with id: " + characterId + " remote");
 
         characterService.deleteCharacterById(characterId);
 
@@ -140,8 +132,6 @@ public class CharacterController {
 
         return dataWrapper;
     }
-
-
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({ComicNotFoundException.class, CharacterNotFoundException.class})
