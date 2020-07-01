@@ -14,14 +14,14 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
 
     Optional<Comic> findById(Long id);
 
-    @Query("SELECT c FROM comic c JOIN c.dates d " +
+    @Query("SELECT DISTINCT c FROM Comic c JOIN c.dates d " +
             "WHERE d.date >= :dateFrom AND d.date <= :dateTo AND c.title = :title ")
     Page<Comic> findAllByTitleAndBetweenDatesAndOrdered(@Param("dateFrom") LocalDateTime dateFrom,
                                                         @Param("dateTo") LocalDateTime dateTo,
                                                         @Param("title") String title,
                                                         Pageable pageable);
 
-    @Query("SELECT c FROM comic c JOIN c.dates d " +
+    @Query("SELECT DISTINCT c FROM Comic c JOIN c.dates d " +
             "WHERE d.date >= :dateFrom AND d.date <= :dateTo ")
     Page<Comic> findAllBetweenDatesAndOrdered(@Param("dateFrom") LocalDateTime dateFrom,
                                               @Param("dateTo") LocalDateTime dateTo,

@@ -6,15 +6,12 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
 @Accessors(chain = true)
-@Entity(name = "comic")
+@Entity
 public class Comic {
 
     @Id
@@ -36,35 +33,33 @@ public class Comic {
     @Lob
     private Byte[] fullImage;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comic")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comic", fetch = FetchType.LAZY)
     private List<ComicDate> dates = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comic")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comic", fetch = FetchType.LAZY)
     private List<ComicPrice> prices = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "comic_marvel_characters",
             joinColumns = @JoinColumn(name = "comic_id"),
             inverseJoinColumns = @JoinColumn(name = "marvel_characters_id"))
-    private List<MarvelCharacter> marvelCharacters = new ArrayList<>();
+    private Set<MarvelCharacter> marvelCharacters = new TreeSet<>();
 
-    public void setComicDate(ComicDate comicDate) {
-        if (comicDate != null) {
-            this.dates.add(comicDate);
+    public void addComicDate(ComicDate comicDate) {
+        if (dates == null) {
+            dates = new ArrayList<>();
         }
+        comicDate.setComic(this);
+        dates.add(comicDate);
     }
 
-    public void setComicPrice(ComicPrice comicPrice) {
-        if (comicPrice != null) {
-            this.prices.add(comicPrice);
+    public void addComicPrice(ComicPrice comicPrice){
+        if (prices == null) {
+            prices = new ArrayList<>();
         }
-    }
-
-    public void setCharacter(MarvelCharacter character) {
-        if (character != null) {
-            this.marvelCharacters.add(character);
-        }
+        comicPrice.setComic(this);
+        prices.add(comicPrice);
     }
 
     @Override

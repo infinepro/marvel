@@ -103,6 +103,8 @@ public class ComicServiceImpl implements ComicService, DateHelperService {
                     parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
                     model.getComicId(),
                     pageable);
+
+            pageCharacters.stream().peek(System.out::println);
         } catch (DateTimeParseException e) {
             throw new BadParametersException("Bad parameter, the date must be in the format: " + DATE_FORMAT);
         }
@@ -116,7 +118,6 @@ public class ComicServiceImpl implements ComicService, DateHelperService {
         try {
             List<MarvelCharacterDTO> charactersDto = getCharactersPageByModel(model)
                     .stream()
-                    .peek(System.out::println)
                     .map(characterToDtoConverter::convert)
                     .collect(Collectors.toList());
 

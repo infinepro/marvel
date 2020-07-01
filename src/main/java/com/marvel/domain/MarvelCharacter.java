@@ -6,10 +6,7 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -38,7 +35,7 @@ public class MarvelCharacter {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    private List<Comic> comics = new ArrayList<>();
+    private Set<Comic> comics = new HashSet<>();
 
     public void setComic(Comic comic) {
         if (comic != null) {

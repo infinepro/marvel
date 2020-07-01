@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ public class ComicPriceDTO {
     private String id;
 
     @NotBlank
+    @Length(max = 255, message = "max length type maybe 255")
     private String type;
 
     @NotBlank

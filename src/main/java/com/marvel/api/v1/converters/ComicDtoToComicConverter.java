@@ -11,6 +11,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,10 +36,10 @@ public class ComicDtoToComicConverter implements Converter<ComicDTO, Comic>, Dat
         if (comicDto == null)
             return null;
 
-        final List<MarvelCharacter> characters = comicDto.getMarvelCharacters()
+        final Set<MarvelCharacter> characters = comicDto.getMarvelCharacters()
                 .stream()
                 .map(characterDtoToCharacterConverter::convert)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         final List<ComicPrice> prices = comicDto.getPrices()
                 .stream()

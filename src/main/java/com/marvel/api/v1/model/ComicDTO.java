@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -13,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.marvel.services.DateHelperService.DATE_FORMAT;
+import static com.marvel.services.DateHelperService.DATE_FORMAT_LENGTH;
 
 @Getter
 @Setter
@@ -29,7 +33,7 @@ public class ComicDTO {
     private String description;
 
     @NotBlank
-    @Past
+    @Length(max = 19, min = 19)
     private String modified;
 
     @NotBlank
