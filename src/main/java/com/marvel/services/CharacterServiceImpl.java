@@ -22,7 +22,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,6 +152,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     @Transactional
     public ResponseDataContainerModel<MarvelCharacterDTO> saveMarvelCharacterDto(MarvelCharacterDTO model) {
 
+        model.setId(null);
         try {
             if (model == null)
                 throw new IllegalArgumentException();
@@ -162,11 +162,27 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
             responseModel.getResults().add(characterToDtoConverter.convert(result));
 
             return responseModel;
-
         } catch (IllegalArgumentException e) {
             throw new NotValidCharacterParametersException("Not valid data for MarvelCharacter");
         }
+    }
 
+    @Override
+    public ResponseDataContainerModel<MarvelCharacterDTO> updateMarvelCharacterById(Long characterId,
+                                                                                    MarvelCharacterDTO model) {
 
+        try {
+            if (model == null)
+                throw new IllegalArgumentException();
+
+            model.setId(characterId);
+            MarvelCharacter result = characterRepository.save(dtoToCharacterConverter.convert(model));
+            ResponseDataContainerModel<MarvelCharacterDTO> responseModel = new ResponseDataContainerModel<>();
+            responseModel.getResults().add(characterToDtoConverter.convert(result));
+
+            return responseModel;
+        } catch (IllegalArgumentException e) {
+            throw new NotValidCharacterParametersException("Not valid data for MarvelCharacter");
+        }
     }
 }

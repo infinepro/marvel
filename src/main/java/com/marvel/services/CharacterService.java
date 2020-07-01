@@ -14,4 +14,6 @@ public interface CharacterService {
     ResponseDataContainerModel<ComicDTO> getComicsByCharacterId(Long characterId);
 
     ResponseDataContainerModel<MarvelCharacterDTO> saveMarvelCharacterDto(MarvelCharacterDTO model);
+
+    ResponseDataContainerModel<MarvelCharacterDTO> updateMarvelCharacterById(Long characterId, MarvelCharacterDTO model);
 }

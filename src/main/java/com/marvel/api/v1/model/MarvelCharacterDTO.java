@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -16,18 +15,15 @@ import java.util.List;
 @Accessors(chain = true)
 public class MarvelCharacterDTO {
 
-    private String id;
+    private Long id;
 
-    @NotBlank
+    @NotBlank(message = "You must specify a name")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "You must specify a discription")
     private String description;
 
-    @NotBlank
-    @Past
     private String modified;
-
     private Byte[] thumbnail;
     private Byte[] fullImage;
 

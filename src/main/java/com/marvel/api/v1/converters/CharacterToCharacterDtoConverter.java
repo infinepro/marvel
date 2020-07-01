@@ -19,7 +19,7 @@ public class CharacterToCharacterDtoConverter implements Converter<MarvelCharact
         final MarvelCharacterDTO characterDTO = new MarvelCharacterDTO();
 
         characterDTO
-                .setId(character.getId().toString())
+                .setId(character.getId())
                 .setName(character.getName())
                 .setDescription(character.getDescription())
                 .setModified(parseLocalDateTimeFormatToString(character.getModified()))

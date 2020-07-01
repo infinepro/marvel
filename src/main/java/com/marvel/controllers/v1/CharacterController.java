@@ -4,13 +4,14 @@ import com.marvel.api.v1.model.*;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
+import com.marvel.exceptions.NotValidCharacterParametersException;
 import com.marvel.services.CharacterService;
 import com.marvel.services.ModelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.time.format.DateTimeParseException;
 
 @Slf4j
@@ -73,7 +74,7 @@ public class CharacterController {
         return dataWrapper;
     }
 
-    @GetMapping("{characterId}/comics")
+    @GetMapping("/{characterId}/comics")
     @ResponseStatus(HttpStatus.OK)
     public CharacterDataWrapper<ComicDTO> getComicsByCharacterId(@PathVariable String characterId) {
 
@@ -85,7 +86,7 @@ public class CharacterController {
 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
-    public CharacterDataWrapper<MarvelCharacterDTO> addNewMarvelCharacter(MarvelCharacterDTO model) {
+    public CharacterDataWrapper<MarvelCharacterDTO> addNewMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model) {
 
         CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
         dataWrapper.setData(characterService.saveMarvelCharacterDto(model));
@@ -100,6 +101,26 @@ public class CharacterController {
         return dataWrapper;
     }
 
+    @PutMapping("/{characterId}/update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CharacterDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model,
+                                                                          @PathVariable String characterId) {
+
+        CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
+
+        try {
+            dataWrapper.setData(characterService.updateMarvelCharacterById(Long.valueOf(characterId), model));
+        } catch (NumberFormatException e) {
+            throw new NotValidCharacterParametersException("id not valid");
+        }
+
+        log.info("character with id: " + dataWrapper.getData().getResults().get(0).getId() + " updated");
+
+        dataWrapper.setCode(HttpStatus.CREATED.value());
+        dataWrapper.setStatus("character with id: " + dataWrapper.getData().getResults().get(0).getId() + " updated");
+
+        return dataWrapper;
+    }
 
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

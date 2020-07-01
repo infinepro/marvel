@@ -28,7 +28,7 @@ public class CharacterDtoToCharacterConverter implements Converter<MarvelCharact
                 .collect(Collectors.toList());
 
         character
-                .setId(Long.valueOf(characterDto.getId()))
+                .setId(characterDto.getId())
                 .setName(characterDto.getName())
                 .setDescription(characterDto.getDescription())
                 .setModified(parseStringDateFormatToLocalDateTime(characterDto.getModified()))
