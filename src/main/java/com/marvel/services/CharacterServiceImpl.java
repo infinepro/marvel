@@ -1,5 +1,6 @@
 package com.marvel.services;
 
+import com.marvel.api.v1.converters.CharacterDtoToCharacterConverter;
 import com.marvel.api.v1.converters.CharacterToCharacterDtoConverter;
 import com.marvel.api.v1.converters.ComicToComicDtoConverter;
 import com.marvel.api.v1.model.ComicDTO;
@@ -10,6 +11,7 @@ import com.marvel.domain.MarvelCharacter;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
+import com.marvel.exceptions.NotValidCharacterParametersException;
 import com.marvel.repositories.CharacterRepository;
 import com.marvel.repositories.ComicRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,16 +39,20 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     private final CharacterToCharacterDtoConverter characterToDtoConverter;
     private final ComicToComicDtoConverter comicToDtoConverter;
     private final ComicRepository comicRepository;
+    private final CharacterDtoToCharacterConverter dtoToCharacterConverter;
 
     public CharacterServiceImpl(CharacterRepository characterRepository,
                                 CharacterToCharacterDtoConverter characterToDtoConverter,
                                 ComicToComicDtoConverter comicToDtoConverter,
-                                ComicRepository comicRepository) {
+                                ComicRepository comicRepository,
+                                CharacterDtoToCharacterConverter dtoToCharacterConverter) {
         this.characterRepository = characterRepository;
         this.characterToDtoConverter = characterToDtoConverter;
         this.comicToDtoConverter = comicToDtoConverter;
         this.comicRepository = comicRepository;
+        this.dtoToCharacterConverter = dtoToCharacterConverter;
     }
+
 
     private Page<MarvelCharacter> getCharactersByModel(QueryCharacterModel model) {
 
@@ -86,21 +93,25 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     @Override
     @Transactional
     public ResponseDataContainerModel<MarvelCharacterDTO> getCharacters(QueryCharacterModel model) {
+        try {
+            List<MarvelCharacterDTO> charactersDto = getCharactersByModel(model)
+                    .stream()
+                    .peek(System.out::println)
+                    .map(characterToDtoConverter::convert)
+                    .collect(Collectors.toList());
 
-        List<MarvelCharacterDTO> charactersDto = getCharactersByModel(model)
-                .stream()
-                .peek(System.out::println)
-                .map(characterToDtoConverter::convert)
-                .collect(Collectors.toList());
+            if (charactersDto.isEmpty())
+                throw new CharacterNotFoundException("Character from comic where ID:" + model.getComicId() + "not found");
 
-        if (charactersDto.isEmpty())
-            throw new CharacterNotFoundException("Character from comic with ID:" + model.getComicId() + " not found");
+            return new ResponseDataContainerModel<MarvelCharacterDTO>()
+                    .setResults(charactersDto)
+                    .setCount(charactersDto.size())
+                    .setNumberPage(model.getNumberPage())
+                    .setPageSize(model.getPageSize());
+        } catch (Exception e) {
+            throw new CharacterNotFoundException("Character from comic where ID:" + model.getComicId() + "not found");
+        }
 
-        return new ResponseDataContainerModel<MarvelCharacterDTO>()
-                .setResults(charactersDto)
-                .setCount(charactersDto.size())
-                .setNumberPage(model.getNumberPage())
-                .setPageSize(model.getPageSize());
     }
 
     @Override
@@ -138,4 +149,24 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
             throw new ComicNotFoundException("Character with id:" + characterId + " not found");
     }
 
+    @Override
+    @Transactional
+    public ResponseDataContainerModel<MarvelCharacterDTO> saveMarvelCharacterDto(MarvelCharacterDTO model) {
+
+        try {
+            if (model == null)
+                throw new IllegalArgumentException();
+
+            MarvelCharacter result = characterRepository.save(dtoToCharacterConverter.convert(model));
+            ResponseDataContainerModel<MarvelCharacterDTO> responseModel = new ResponseDataContainerModel<>();
+            responseModel.getResults().add(characterToDtoConverter.convert(result));
+
+            return responseModel;
+
+        } catch (IllegalArgumentException e) {
+            throw new NotValidCharacterParametersException("Not valid data for MarvelCharacter");
+        }
+
+
+    }
 }

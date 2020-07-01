@@ -2,6 +2,7 @@ package com.marvel.controllers.v1;
 
 import com.marvel.api.v1.model.*;
 import com.marvel.exceptions.BadParametersException;
+import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
 import com.marvel.services.CharacterService;
 import com.marvel.services.ModelService;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.format.DateTimeParseException;
 
 @Slf4j
@@ -81,10 +83,27 @@ public class CharacterController {
         return dataWrapper;
     }
 
+    @PostMapping("/new")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CharacterDataWrapper<MarvelCharacterDTO> addNewMarvelCharacter(MarvelCharacterDTO model) {
+
+        CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
+        dataWrapper.setData(characterService.saveMarvelCharacterDto(model));
+
+        log.info("New character with name: " + model.getName() +
+                " and id: " + dataWrapper.getData().getResults().get(0).getId() + " created");
+
+        dataWrapper.setCode(HttpStatus.CREATED.value());
+        dataWrapper.setStatus("New character with name: " + model.getName() +
+                " and id: " + dataWrapper.getData().getResults().get(0).getId() + " created");
+
+        return dataWrapper;
+    }
+
 
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(ComicNotFoundException.class)
+    @ExceptionHandler({ComicNotFoundException.class, CharacterNotFoundException.class})
     public CharacterDataWrapper<Object> handleNotFound(Exception exception) {
         log.error(exception.getMessage());
 

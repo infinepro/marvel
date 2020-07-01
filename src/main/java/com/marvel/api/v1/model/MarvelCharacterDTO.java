@@ -7,6 +7,8 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,5 +30,8 @@ public class MarvelCharacterDTO {
 
     private Byte[] thumbnail;
     private Byte[] fullImage;
+
+    @Size(min = 1)
+    private List<Long> comicsId;
 
 }
