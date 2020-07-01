@@ -1,6 +1,9 @@
 package com.marvel.controllers.v1;
 
-import com.marvel.api.v1.model.*;
+import com.marvel.api.v1.model.CharacterDataWrapper;
+import com.marvel.api.v1.model.ComicDTO;
+import com.marvel.api.v1.model.MarvelCharacterDTO;
+import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
@@ -9,6 +12,7 @@ import com.marvel.services.CharacterService;
 import com.marvel.services.ModelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -71,41 +75,72 @@ public class CharacterController {
 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
-    public CharacterDataWrapper<MarvelCharacterDTO> addNewMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model) {
+    public CharacterDataWrapper<MarvelCharacterDTO> addNewMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model,
+                                                                          BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.error("creating character error");
+            log.error(bindingResult.getAllErrors().toString());
+            throw new BadParametersException();
+        }
 
         CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
         dataWrapper.setData(characterService.saveMarvelCharacterDto(model));
-
-        log.info("New character with name: " + model.getName() +
-                " and id: " + dataWrapper.getData().getResults().get(0).getId() + " created");
-
         dataWrapper.setCode(HttpStatus.CREATED.value());
         dataWrapper.setStatus("New character with name: " + model.getName() +
+                " and id: " + dataWrapper.getData().getResults().get(0).getId() + " created");
+
+        log.info("New character with name: " + model.getName() +
                 " and id: " + dataWrapper.getData().getResults().get(0).getId() + " created");
 
         return dataWrapper;
     }
 
     @PutMapping("/{characterId}/update")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public CharacterDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model,
-                                                                          @PathVariable Long characterId) {
+                                                                          @PathVariable Long characterId,
+                                                                          BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.error("updating character error");
+            log.error(bindingResult.getAllErrors().toString());
+            throw new BadParametersException();
+        }
 
         CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
-
-        try {
-            dataWrapper.setData(characterService.updateMarvelCharacterById(Long.valueOf(characterId), model));
-        } catch (NumberFormatException e) {
-            throw new NotValidCharacterParametersException("id not valid");
-        }
+        dataWrapper.setData(characterService.updateMarvelCharacterById(characterId, model));
+        dataWrapper.setCode(HttpStatus.OK.value());
+        dataWrapper.setStatus("character with id: " + dataWrapper.getData().getResults().get(0).getId() + " updated");
 
         log.info("character with id: " + dataWrapper.getData().getResults().get(0).getId() + " updated");
 
-        dataWrapper.setCode(HttpStatus.CREATED.value());
-        dataWrapper.setStatus("character with id: " + dataWrapper.getData().getResults().get(0).getId() + " updated");
+        return dataWrapper;
+    }
+
+    @DeleteMapping("/{characterId}/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public CharacterDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@PathVariable Long characterId,
+                                                                          BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.error("deletion error");
+            log.error(bindingResult.getAllErrors().toString());
+            throw new BadParametersException();
+        }
+
+
+        CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
+        dataWrapper.setCode(HttpStatus.OK.value());
+        dataWrapper.setStatus("character with id: " + dataWrapper.getData().getResults().get(0).getId() + " remote");
+
+        characterService.deleteCharacterById(characterId);
+
+        log.info("character with id: " + characterId + " remote");
 
         return dataWrapper;
     }
+
 
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

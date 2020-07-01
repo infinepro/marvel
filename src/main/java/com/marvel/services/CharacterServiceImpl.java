@@ -171,6 +171,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     }
 
     @Override
+    @Transactional
     public ResponseDataContainerModel<MarvelCharacterDTO> updateMarvelCharacterById(Long characterId,
                                                                                     MarvelCharacterDTO model) {
         try {
@@ -187,5 +188,16 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
         } catch (IllegalArgumentException e) {
             throw new NotValidCharacterParametersException("Not valid data for MarvelCharacter");
         }
+    }
+
+    @Override
+    @Transactional
+    public void deleteCharacterById(Long characterId) {
+        Optional<MarvelCharacter> optionalCharacter = characterRepository.findById(characterId);
+
+        if (optionalCharacter.isPresent()) {
+            characterRepository.delete(optionalCharacter.get());
+        } else
+            throw new CharacterNotFoundException("character with id: " + characterId + "not found");
     }
 }
