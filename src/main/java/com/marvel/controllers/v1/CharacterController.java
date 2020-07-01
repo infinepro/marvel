@@ -1,15 +1,14 @@
 package com.marvel.controllers.v1;
 
-import com.marvel.api.v1.model.CharacterDataWrapper;
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.QueryCharacterModel;
+import com.marvel.api.v1.model.ModelDataWrapper;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
-import com.marvel.exceptions.NotValidCharacterParametersException;
 import com.marvel.services.CharacterService;
-import com.marvel.services.ModelService;
+import com.marvel.services.ModelHelperService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -18,24 +17,26 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.format.DateTimeParseException;
 
+import static com.marvel.controllers.v1.CharacterController.BASE_URL;
+
 @Slf4j
 @RestController
-@RequestMapping(CharacterController.BASE_URL)
+@RequestMapping(BASE_URL)
 public class CharacterController {
 
     public static final String BASE_URL = "/v1/public/characters";
 
     private final CharacterService characterService;
-    private final ModelService modelService;
+    private final ModelHelperService modelHelperService;
 
-    public CharacterController(CharacterService characterService, ModelService modelService) {
+    public CharacterController(CharacterService characterService, ModelHelperService modelHelperService) {
         this.characterService = characterService;
-        this.modelService = modelService;
+        this.modelHelperService = modelHelperService;
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public CharacterDataWrapper<MarvelCharacterDTO> getCharacters(
+    public ModelDataWrapper<MarvelCharacterDTO> getCharacters(
             @RequestParam(required = false) String comic_id,
             @RequestParam(required = false) String number_page,
             @RequestParam(required = false) String page_size,
@@ -44,10 +45,11 @@ public class CharacterController {
             @RequestParam(required = false) String modified_to) {
 
         log.info(modified_to);
-        QueryCharacterModel model = modelService
-                .setParametersIntoModel(comic_id, number_page, page_size, order_by, modified_from, modified_to);
+        QueryCharacterModel model = modelHelperService
+                .setParametersIntoQueryCharacterModel(
+                        comic_id, number_page, page_size, order_by, modified_from, modified_to);
 
-        CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
+        ModelDataWrapper<MarvelCharacterDTO> dataWrapper = new ModelDataWrapper<>();
         dataWrapper.setData(characterService.getCharacters(model));
 
         return dataWrapper;
@@ -55,9 +57,9 @@ public class CharacterController {
 
     @GetMapping("/{characterId}")
     @ResponseStatus(HttpStatus.OK)
-    public CharacterDataWrapper<MarvelCharacterDTO> getCharacter(@PathVariable Long characterId) {
+    public ModelDataWrapper<MarvelCharacterDTO> getCharacter(@PathVariable Long characterId) {
 
-        CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
+        ModelDataWrapper<MarvelCharacterDTO> dataWrapper = new ModelDataWrapper<>();
         dataWrapper.setData(characterService.getCharacterById(Long.valueOf(characterId)));
 
         return dataWrapper;
@@ -65,9 +67,9 @@ public class CharacterController {
 
     @GetMapping("/{characterId}/comics")
     @ResponseStatus(HttpStatus.OK)
-    public CharacterDataWrapper<ComicDTO> getComicsByCharacterId(@PathVariable Long characterId) {
+    public ModelDataWrapper<ComicDTO> getComicsByCharacterId(@PathVariable Long characterId) {
 
-        CharacterDataWrapper<ComicDTO> dataWrapper = new CharacterDataWrapper<>();
+        ModelDataWrapper<ComicDTO> dataWrapper = new ModelDataWrapper<>();
         dataWrapper.setData(characterService.getComicsByCharacterId(Long.valueOf(characterId)));
 
         return dataWrapper;
@@ -75,16 +77,16 @@ public class CharacterController {
 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
-    public CharacterDataWrapper<MarvelCharacterDTO> addNewMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model,
-                                                                          BindingResult bindingResult) {
+    public ModelDataWrapper<MarvelCharacterDTO> addNewMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model,
+                                                                      BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             log.error("creating character error");
             log.error(bindingResult.getAllErrors().toString());
-            throw new BadParametersException();
+            throw new BadParametersException("Creating character error, bad request parameters");
         }
 
-        CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
+        ModelDataWrapper<MarvelCharacterDTO> dataWrapper = new ModelDataWrapper<>();
         dataWrapper.setData(characterService.saveMarvelCharacterDto(model));
         dataWrapper.setCode(HttpStatus.CREATED.value());
         dataWrapper.setStatus("New character with name: " + model.getName() +
@@ -98,17 +100,17 @@ public class CharacterController {
 
     @PutMapping("/{characterId}/update")
     @ResponseStatus(HttpStatus.OK)
-    public CharacterDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model,
-                                                                          @PathVariable Long characterId,
-                                                                          BindingResult bindingResult) {
+    public ModelDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model,
+                                                                      @PathVariable Long characterId,
+                                                                      BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             log.error("updating character error");
             log.error(bindingResult.getAllErrors().toString());
-            throw new BadParametersException();
+            throw new BadParametersException("Updating character error, bad request parameters");
         }
 
-        CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
+        ModelDataWrapper<MarvelCharacterDTO> dataWrapper = new ModelDataWrapper<>();
         dataWrapper.setData(characterService.updateMarvelCharacterById(characterId, model));
         dataWrapper.setCode(HttpStatus.OK.value());
         dataWrapper.setStatus("character with id: " + dataWrapper.getData().getResults().get(0).getId() + " updated");
@@ -120,9 +122,9 @@ public class CharacterController {
 
     @DeleteMapping("/{characterId}/delete")
     @ResponseStatus(HttpStatus.OK)
-    public CharacterDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@PathVariable Long characterId) {
+    public ModelDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@PathVariable Long characterId) {
 
-        CharacterDataWrapper<MarvelCharacterDTO> dataWrapper = new CharacterDataWrapper<>();
+        ModelDataWrapper<MarvelCharacterDTO> dataWrapper = new ModelDataWrapper<>();
         dataWrapper.setCode(HttpStatus.OK.value());
         dataWrapper.setStatus("character with id: " + characterId + " remote");
 
@@ -135,10 +137,10 @@ public class CharacterController {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({ComicNotFoundException.class, CharacterNotFoundException.class})
-    public CharacterDataWrapper<Object> handleNotFound(Exception exception) {
+    public ModelDataWrapper<Object> handleNotFound(Exception exception) {
         log.error(exception.getMessage());
 
-        CharacterDataWrapper<Object> dataWrapper = new CharacterDataWrapper<>();
+        ModelDataWrapper<Object> dataWrapper = new ModelDataWrapper<>();
 
         dataWrapper.setCode(HttpStatus.NOT_FOUND.value());
         dataWrapper.setStatus(exception.getMessage());
@@ -148,10 +150,10 @@ public class CharacterController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({BadParametersException.class, DateTimeParseException.class, NumberFormatException.class})
-    public CharacterDataWrapper<Object> handleBadParameters(Exception exception) {
+    public ModelDataWrapper<Object> handleBadParameters(Exception exception) {
         log.error(exception.getMessage());
 
-        CharacterDataWrapper<Object> dataWrapper = new CharacterDataWrapper<>();
+        ModelDataWrapper<Object> dataWrapper = new ModelDataWrapper<>();
 
         dataWrapper.setCode(HttpStatus.BAD_REQUEST.value());
         dataWrapper.setStatus(exception.getMessage());

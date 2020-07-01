@@ -6,7 +6,7 @@ import com.marvel.api.v1.converters.ComicToComicDtoConverter;
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.QueryCharacterModel;
-import com.marvel.api.v1.model.ResponseDataContainerModel;
+import com.marvel.api.v1.model.ModelDataContainer;
 import com.marvel.domain.MarvelCharacter;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.marvel.services.ModelService.MINUS_ONE;
+import static com.marvel.services.ModelHelperService.MINUS_ONE;
 
 @Slf4j
 @Service
@@ -54,7 +54,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     }
 
 
-    private Page<MarvelCharacter> getCharactersByModel(QueryCharacterModel model) {
+    private Page<MarvelCharacter> getCharactersPageByModel(QueryCharacterModel model) {
 
         Sort sort;
 
@@ -92,37 +92,36 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
 
     @Override
     @Transactional
-    public ResponseDataContainerModel<MarvelCharacterDTO> getCharacters(QueryCharacterModel model) {
+    public ModelDataContainer<MarvelCharacterDTO> getCharacters(QueryCharacterModel model) {
         try {
-            List<MarvelCharacterDTO> charactersDto = getCharactersByModel(model)
+            List<MarvelCharacterDTO> charactersDto = getCharactersPageByModel(model)
                     .stream()
                     .peek(System.out::println)
                     .map(characterToDtoConverter::convert)
                     .collect(Collectors.toList());
 
             if (charactersDto.isEmpty())
-                throw new CharacterNotFoundException("Character from comic where ID:" + model.getComicId() + "not found");
+                throw new CharacterNotFoundException("Characters not found");
 
-            return new ResponseDataContainerModel<MarvelCharacterDTO>()
+            return new ModelDataContainer<MarvelCharacterDTO>()
                     .setResults(charactersDto)
                     .setCount(charactersDto.size())
                     .setNumberPage(model.getNumberPage())
                     .setPageSize(model.getPageSize());
         } catch (Exception e) {
-            throw new CharacterNotFoundException("Character from comic where ID:" + model.getComicId() + "not found");
+            throw new CharacterNotFoundException("Characters not found");
         }
-
     }
 
     @Override
     @Transactional
-    public ResponseDataContainerModel<MarvelCharacterDTO> getCharacterById(Long id) {
+    public ModelDataContainer<MarvelCharacterDTO> getCharacterById(Long id) {
         Optional<MarvelCharacter> optionalCharacter = characterRepository.findById(id);
 
         if (optionalCharacter.isPresent()) {
             List<MarvelCharacterDTO> list = new ArrayList<>();
             list.add(characterToDtoConverter.convert(optionalCharacter.get()));
-            ResponseDataContainerModel<MarvelCharacterDTO> model = new ResponseDataContainerModel<>();
+            ModelDataContainer<MarvelCharacterDTO> model = new ModelDataContainer<>();
             model.setResults(list);
 
             return model;
@@ -133,11 +132,11 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
 
     @Override
     @Transactional
-    public ResponseDataContainerModel<ComicDTO> getComicsByCharacterId(Long characterId) {
+    public ModelDataContainer<ComicDTO> getComicsByCharacterId(Long characterId) {
         Optional<MarvelCharacter> optionalCharacter = characterRepository.findById(characterId);
 
         if (optionalCharacter.isPresent()) {
-            ResponseDataContainerModel<ComicDTO> model = new ResponseDataContainerModel<>();
+            ModelDataContainer<ComicDTO> model = new ModelDataContainer<>();
             model.setResults(
                     optionalCharacter.get().getComics()
                             .stream()
@@ -151,7 +150,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
 
     @Override
     @Transactional
-    public ResponseDataContainerModel<MarvelCharacterDTO> saveMarvelCharacterDto(MarvelCharacterDTO model) {
+    public ModelDataContainer<MarvelCharacterDTO> saveMarvelCharacterDto(MarvelCharacterDTO model) {
 
         try {
             if (model == null) {
@@ -161,7 +160,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
             model.setId(null);
             MarvelCharacter result = characterRepository
                     .saveAndFlush(dtoToCharacterConverter.convert(model).setModified(LocalDateTime.now()));
-            ResponseDataContainerModel<MarvelCharacterDTO> responseModel = new ResponseDataContainerModel<>();
+            ModelDataContainer<MarvelCharacterDTO> responseModel = new ModelDataContainer<>();
             responseModel.getResults().add(characterToDtoConverter.convert(result));
 
             return responseModel;
@@ -172,8 +171,8 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
 
     @Override
     @Transactional
-    public ResponseDataContainerModel<MarvelCharacterDTO> updateMarvelCharacterById(Long characterId,
-                                                                                    MarvelCharacterDTO model) {
+    public ModelDataContainer<MarvelCharacterDTO> updateMarvelCharacterById(Long characterId,
+                                                                            MarvelCharacterDTO model) {
         try {
             if (model == null)
                 throw new IllegalArgumentException();
@@ -181,7 +180,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
             model.setId(characterId);
             MarvelCharacter result = characterRepository
                     .saveAndFlush(dtoToCharacterConverter.convert(model).setModified(LocalDateTime.now()));
-            ResponseDataContainerModel<MarvelCharacterDTO> responseModel = new ResponseDataContainerModel<>();
+            ModelDataContainer<MarvelCharacterDTO> responseModel = new ModelDataContainer<>();
             responseModel.getResults().add(characterToDtoConverter.convert(result));
 
             return responseModel;

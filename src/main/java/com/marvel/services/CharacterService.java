@@ -3,19 +3,19 @@ package com.marvel.services;
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.QueryCharacterModel;
-import com.marvel.api.v1.model.ResponseDataContainerModel;
+import com.marvel.api.v1.model.ModelDataContainer;
 
 public interface CharacterService {
 
-    ResponseDataContainerModel<MarvelCharacterDTO> getCharacters(QueryCharacterModel model);
+    ModelDataContainer<MarvelCharacterDTO> getCharacters(QueryCharacterModel model);
 
-    ResponseDataContainerModel<MarvelCharacterDTO> getCharacterById(Long id);
+    ModelDataContainer<MarvelCharacterDTO> getCharacterById(Long id);
 
-    ResponseDataContainerModel<ComicDTO> getComicsByCharacterId(Long characterId);
+    ModelDataContainer<ComicDTO> getComicsByCharacterId(Long characterId);
 
-    ResponseDataContainerModel<MarvelCharacterDTO> saveMarvelCharacterDto(MarvelCharacterDTO model);
+    ModelDataContainer<MarvelCharacterDTO> saveMarvelCharacterDto(MarvelCharacterDTO model);
 
-    ResponseDataContainerModel<MarvelCharacterDTO> updateMarvelCharacterById(Long characterId, MarvelCharacterDTO model);
+    ModelDataContainer<MarvelCharacterDTO> updateMarvelCharacterById(Long characterId, MarvelCharacterDTO model);
 
     void deleteCharacterById(Long characterId);
 }

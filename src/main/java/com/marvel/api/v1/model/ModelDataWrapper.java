@@ -8,13 +8,13 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class CharacterDataWrapper<T> {
+public class ModelDataWrapper<T> {
 
     private Integer code;
     private String status;
-    private ResponseDataContainerModel<T> data;
+    private ModelDataContainer<T> data;
 
-    public CharacterDataWrapper() {
+    public ModelDataWrapper() {
         this.code = 200;
         this.status = "all right";
     }
