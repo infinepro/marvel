@@ -16,16 +16,24 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
 
     @Query("SELECT c FROM comic c JOIN c.dates d " +
             "WHERE d.date >= :dateFrom AND d.date <= :dateTo AND c.title = :title ")
-    Page<Comic> findAllByTitleAndBetweenDatesOrdered(@Param("dateFrom") LocalDateTime dateFrom,
-                                                     @Param("dateTo") LocalDateTime dateTo,
-                                                     @Param("title") String title,
-                                                     Pageable pageable);
+    Page<Comic> findAllByTitleAndBetweenDatesAndOrdered(@Param("dateFrom") LocalDateTime dateFrom,
+                                                        @Param("dateTo") LocalDateTime dateTo,
+                                                        @Param("title") String title,
+                                                        Pageable pageable);
 
     @Query("SELECT c FROM comic c JOIN c.dates d " +
             "WHERE d.date >= :dateFrom AND d.date <= :dateTo ")
-    Page<Comic> findAllBetweenDatesOrdered(@Param("dateFrom") LocalDateTime dateFrom,
-                                           @Param("dateTo") LocalDateTime dateTo,
-                                           Pageable pageable);
+    Page<Comic> findAllBetweenDatesAndOrdered(@Param("dateFrom") LocalDateTime dateFrom,
+                                              @Param("dateTo") LocalDateTime dateTo,
+                                              Pageable pageable);
 
+    /*
+    @Query("SELECT m FROM comic c JOIN c.dates d LEFT JOIN c.marvelCharacters m " +
+            "WHERE d.date >= :dateFrom AND d.date <= :dateTo AND c.id = :comicId ")
+    Page<MarvelCharacter> findAllByComicIdAndBetweenDatesAndOrdered(@Param("dateFrom") LocalDateTime dateFrom,
+                                                                    @Param("dateTo") LocalDateTime dateTo,
+                                                                    @Param("comicId") Long comicId,
+                                                                    Pageable pageable);
+    */
 }
 

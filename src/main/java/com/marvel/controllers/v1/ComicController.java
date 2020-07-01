@@ -1,15 +1,15 @@
 package com.marvel.controllers.v1;
 
-import com.marvel.api.v1.model.ComicDTO;
-import com.marvel.api.v1.model.QueryComicModel;
-import com.marvel.api.v1.model.ModelDataWrapper;
+import com.marvel.api.v1.model.*;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
+import com.marvel.services.CharacterService;
 import com.marvel.services.ComicService;
 import com.marvel.services.ModelHelperService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,10 +26,14 @@ public class ComicController {
 
     private final ComicService comicService;
     private final ModelHelperService modelHelperService;
+    private final CharacterService characterService;
 
-    public ComicController(ComicService comicService, ModelHelperService modelHelperService) {
+    public ComicController(ComicService comicService,
+                           ModelHelperService modelHelperService,
+                           CharacterService characterService) {
         this.comicService = comicService;
         this.modelHelperService = modelHelperService;
+        this.characterService = characterService;
     }
 
     @GetMapping
@@ -47,7 +51,7 @@ public class ComicController {
                         number_page, page_size, title, creating_date_from, creating_date_to, order_by);
 
         ModelDataWrapper<ComicDTO> responseModel = new ModelDataWrapper<>();
-        responseModel.setData(comicService.findComics(model));
+        responseModel.setData(comicService.getComics(model));
 
         return responseModel;
     }
@@ -55,40 +59,89 @@ public class ComicController {
     @GetMapping("/{comicId}")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> getComic(@PathVariable Long comicId) {
-
         ModelDataWrapper<ComicDTO> responseModel = new ModelDataWrapper<>();
-        responseModel.setData(comicService.findComicById(comicId));
+        responseModel.setData(comicService.getComicById(comicId));
 
         return responseModel;
     }
 
     @GetMapping("/{comicId}/characters")
     @ResponseStatus(HttpStatus.OK)
-    public ModelDataWrapper<ComicDTO> getCharactersByComicId(@PathVariable Long comicId) {
-        //todo:`1
-        return null;
+    public ModelDataWrapper<MarvelCharacterDTO> getCharactersByComicId(
+            @PathVariable String comicId,
+            @RequestParam(required = false) String number_page,
+            @RequestParam(required = false) String page_size,
+            @RequestParam(required = false) String order_by,
+            @RequestParam(required = false) String modified_from,
+            @RequestParam(required = false) String modified_to) {
+
+        QueryCharacterModel model = modelHelperService
+                .setParametersIntoQueryCharacterModel(
+                        comicId, number_page, page_size, order_by, modified_from, modified_to);
+
+        ModelDataWrapper<MarvelCharacterDTO> dataWrapper = new ModelDataWrapper<>();
+        dataWrapper.setData(comicService.getCharactersByModel(model));
+
+        return dataWrapper;
     }
 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
-    public ModelDataWrapper<ComicDTO> addNewComic(@RequestBody @Valid ComicDTO model) {
-        //todo:`1
-        return null;
+    public ModelDataWrapper<ComicDTO> addNewComic(@RequestBody @Valid ComicDTO model,
+                                                  BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.error("creating comic error");
+            log.error(bindingResult.getAllErrors().toString());
+            throw new BadParametersException("Creating comic error, bad request parameters");
+        }
+
+        ModelDataWrapper<ComicDTO> dataWrapper = new ModelDataWrapper<>();
+        dataWrapper.setData(comicService.saveComicDto(model));
+        dataWrapper.setCode(HttpStatus.CREATED.value());
+        dataWrapper.setStatus("New comic with title: " + model.getTitle() +
+                " and id: " + dataWrapper.getData().getResults().get(0).getId() + " created");
+
+        log.info("New comic with title: " + model.getTitle() +
+                " and id: " + dataWrapper.getData().getResults().get(0).getId() + " created");
+
+        return dataWrapper;
     }
 
     @PutMapping("/{comicId}/update")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> updateComic(@RequestBody @Valid ComicDTO model,
-                                                  @PathVariable Long comicId) {
-        //todo:`1
-        return null;
+                                                  @PathVariable Long comicId,
+                                                  BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.error("updating comic error");
+            log.error(bindingResult.getAllErrors().toString());
+            throw new BadParametersException("Updating comic error, bad request parameters");
+        }
+
+        ModelDataWrapper<ComicDTO> dataWrapper = new ModelDataWrapper<>();
+        dataWrapper.setData(comicService.updateComicById(comicId, model));
+        dataWrapper.setCode(HttpStatus.OK.value());
+        dataWrapper.setStatus("Comic with id: " + comicId + " updated");
+
+        log.info("Comic with id: " + comicId + " updated");
+
+        return dataWrapper;
     }
 
     @DeleteMapping("/{comicId}/delete")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> deleteComicById(@PathVariable Long comicId) {
-        //todo:`1
-        return null;
+
+        ModelDataWrapper<ComicDTO> dataWrapper = new ModelDataWrapper<>();
+        dataWrapper.setCode(HttpStatus.OK.value());
+        dataWrapper.setStatus("comic with id: " + comicId + " remote");
+
+        comicService.deleteComicById(comicId);
+
+        log.info("character with id: " + comicId + " remote");
+
+        return dataWrapper;
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

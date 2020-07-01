@@ -7,7 +7,7 @@ import com.marvel.api.v1.model.ModelDataContainer;
 
 public interface CharacterService {
 
-    ModelDataContainer<MarvelCharacterDTO> getCharacters(QueryCharacterModel model);
+    ModelDataContainer<MarvelCharacterDTO> getCharactersByModel(QueryCharacterModel model);
 
     ModelDataContainer<MarvelCharacterDTO> getCharacterById(Long id);
 

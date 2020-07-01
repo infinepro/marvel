@@ -5,8 +5,8 @@ import com.marvel.api.v1.converters.CharacterToCharacterDtoConverter;
 import com.marvel.api.v1.converters.ComicToComicDtoConverter;
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.MarvelCharacterDTO;
-import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.api.v1.model.ModelDataContainer;
+import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.domain.MarvelCharacter;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
@@ -72,12 +72,12 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
         Page<MarvelCharacter> characters;
         try {
             if (model.getComicId().equals(MINUS_ONE)) {
-                characters = characterRepository.findAllByModifiedDateOrdered(
+                characters = characterRepository.findAllByModifiedDateAndOrdered(
                         parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
                         parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
                         pageable);
             } else {
-                characters = characterRepository.findAllByComicIdAndModifiedDateOrdered(
+                characters = characterRepository.findAllByComicIdAndBetweenModifiedDateAndOrdered(
                         model.getComicId(),
                         parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
                         parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
@@ -92,7 +92,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
 
     @Override
     @Transactional
-    public ModelDataContainer<MarvelCharacterDTO> getCharacters(QueryCharacterModel model) {
+    public ModelDataContainer<MarvelCharacterDTO> getCharactersByModel(QueryCharacterModel model) {
         try {
             List<MarvelCharacterDTO> charactersDto = getCharactersPageByModel(model)
                     .stream()
@@ -153,13 +153,11 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     public ModelDataContainer<MarvelCharacterDTO> saveMarvelCharacterDto(MarvelCharacterDTO model) {
 
         try {
-            if (model == null) {
+            if (model == null)
                 throw new IllegalArgumentException();
-            }
 
-            model.setId(null);
             MarvelCharacter result = characterRepository
-                    .saveAndFlush(dtoToCharacterConverter.convert(model).setModified(LocalDateTime.now()));
+                    .save(dtoToCharacterConverter.convert(model).setModified(LocalDateTime.now()));
             ModelDataContainer<MarvelCharacterDTO> responseModel = new ModelDataContainer<>();
             responseModel.getResults().add(characterToDtoConverter.convert(result));
 
@@ -173,20 +171,9 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
     @Transactional
     public ModelDataContainer<MarvelCharacterDTO> updateMarvelCharacterById(Long characterId,
                                                                             MarvelCharacterDTO model) {
-        try {
-            if (model == null)
-                throw new IllegalArgumentException();
+        model.setId(characterId);
 
-            model.setId(characterId);
-            MarvelCharacter result = characterRepository
-                    .saveAndFlush(dtoToCharacterConverter.convert(model).setModified(LocalDateTime.now()));
-            ModelDataContainer<MarvelCharacterDTO> responseModel = new ModelDataContainer<>();
-            responseModel.getResults().add(characterToDtoConverter.convert(result));
-
-            return responseModel;
-        } catch (IllegalArgumentException e) {
-            throw new NotValidCharacterParametersException("Not valid data for MarvelCharacter");
-        }
+        return this.saveMarvelCharacterDto(model);
     }
 
     @Override

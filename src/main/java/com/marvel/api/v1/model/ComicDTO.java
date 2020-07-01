@@ -20,7 +20,7 @@ import java.util.Set;
 @Accessors(chain = true)
 public class ComicDTO {
 
-    private String id;
+    private Long id;
 
     @NotBlank
     private String title;

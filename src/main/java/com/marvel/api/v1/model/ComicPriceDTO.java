@@ -21,6 +21,7 @@ public class ComicPriceDTO {
 
     @NotBlank
     @PositiveOrZero
-    @Digits(integer = 9, fraction = 2)
+    @Digits(integer = 9, fraction = 2, message = "price maybe no more than two decimal places")
+    @DecimalMin(value = "0.01", inclusive = false, message = "minimum price maybe 0.01")
     private BigDecimal price;
 }

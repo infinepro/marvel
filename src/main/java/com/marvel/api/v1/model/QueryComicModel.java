@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class QueryComicModel {
 
+    private Long comicId;
     private Integer numberPage;
     private Integer pageSize;
     private String title;

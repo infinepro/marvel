@@ -36,13 +36,12 @@ public class CharacterController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ModelDataWrapper<MarvelCharacterDTO> getCharacters(
-            @RequestParam(required = false) String comic_id,
-            @RequestParam(required = false) String number_page,
-            @RequestParam(required = false) String page_size,
-            @RequestParam(required = false) String order_by,
-            @RequestParam(required = false) String modified_from,
-            @RequestParam(required = false) String modified_to) {
+    public ModelDataWrapper<MarvelCharacterDTO> getCharacters(@RequestParam(required = false) String comic_id,
+                                                              @RequestParam(required = false) String number_page,
+                                                              @RequestParam(required = false) String page_size,
+                                                              @RequestParam(required = false) String order_by,
+                                                              @RequestParam(required = false) String modified_from,
+                                                              @RequestParam(required = false) String modified_to) {
 
         log.info(modified_to);
         QueryCharacterModel model = modelHelperService
@@ -50,7 +49,7 @@ public class CharacterController {
                         comic_id, number_page, page_size, order_by, modified_from, modified_to);
 
         ModelDataWrapper<MarvelCharacterDTO> dataWrapper = new ModelDataWrapper<>();
-        dataWrapper.setData(characterService.getCharacters(model));
+        dataWrapper.setData(characterService.getCharactersByModel(model));
 
         return dataWrapper;
     }

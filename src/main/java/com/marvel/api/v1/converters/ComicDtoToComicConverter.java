@@ -52,7 +52,7 @@ public class ComicDtoToComicConverter implements Converter<ComicDTO, Comic>, Dat
         final Comic comic = new Comic();
 
         comic
-                .setId(Long.valueOf(comicDto.getId()))
+                .setId(comicDto.getId())
                 .setTitle(comicDto.getTitle())
                 .setDescription(comicDto.getDescription())
                 .setModified(parseStringDateFormatToLocalDateTime(comicDto.getModified()))

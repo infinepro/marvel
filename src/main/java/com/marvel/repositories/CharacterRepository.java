@@ -18,15 +18,23 @@ public interface CharacterRepository extends JpaRepository<MarvelCharacter, Long
 
     @Query("SELECT m FROM MarvelCharacter m " +
             "WHERE m.modified >= :modifiedFrom AND m.modified <= :modifiedTo ")
-    Page<MarvelCharacter> findAllByModifiedDateOrdered(@Param("modifiedFrom") LocalDateTime modifiedFrom,
-                                                       @Param("modifiedTo") LocalDateTime modifiedTo,
-                                                       Pageable pageable);
+    Page<MarvelCharacter> findAllByModifiedDateAndOrdered(@Param("modifiedFrom") LocalDateTime modifiedFrom,
+                                                          @Param("modifiedTo") LocalDateTime modifiedTo,
+                                                          Pageable pageable);
 
     @Query("SELECT m FROM MarvelCharacter m LEFT JOIN m.comics c " +
             "WHERE c.id = :comicId AND m.modified >= :modifiedFrom AND m.modified <= :modifiedTo ")
-    Page<MarvelCharacter> findAllByComicIdAndModifiedDateOrdered(@Param("comicId") Long id,
-                                                                 @Param("modifiedFrom") LocalDateTime modifiedFrom,
-                                                                 @Param("modifiedTo") LocalDateTime modifiedTo,
-                                                                 Pageable pageable);
+    Page<MarvelCharacter> findAllByComicIdAndBetweenModifiedDateAndOrdered(@Param("comicId") Long id,
+                                                                           @Param("modifiedFrom") LocalDateTime modifiedFrom,
+                                                                           @Param("modifiedTo") LocalDateTime modifiedTo,
+                                                                           Pageable pageable);
+
+    @Query("SELECT m FROM comic c JOIN c.dates d LEFT JOIN c.marvelCharacters m " +
+            "WHERE d.date >= :dateFrom AND d.date <= :dateTo AND c.id = :comicId ")
+    Page<MarvelCharacter> findAllByComicIdAndBetweenDatesAndOrdered(@Param("dateFrom") LocalDateTime dateFrom,
+                                                                    @Param("dateTo") LocalDateTime dateTo,
+                                                                    @Param("comicId") Long comicId,
+                                                                    Pageable pageable);
+
 
 }
