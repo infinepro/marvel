@@ -4,6 +4,7 @@ import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.ModelDataWrapper;
 import com.marvel.api.v1.model.QueryCharacterModel;
+import com.marvel.controllers.v1.ApiInterfaces.CharacterApi;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
@@ -23,12 +24,10 @@ import java.time.format.DateTimeParseException;
 
 import static com.marvel.controllers.v1.CharacterController.BASE_URL;
 
-
-@Api("MarvelCharacters Controller")
 @Slf4j
 @RestController
 @RequestMapping(BASE_URL)
-public class CharacterController {
+public class CharacterController implements CharacterApi {
 
     public static final String BASE_URL = "/v1/public/characters";
 
@@ -40,22 +39,14 @@ public class CharacterController {
         this.modelHelperService = modelHelperService;
     }
 
-    @ApiOperation(value = "This will get a list of Marvel characters.")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<MarvelCharacterDTO> getCharacters(
-            @ApiParam(value = "The unique ID of the character")
                 @RequestParam(required = false) String comic_id,
-            @ApiParam(value = "Page number of the list of models, default 0")
                 @RequestParam(required = false) String number_page,
-            @ApiParam(value = "The number of models per page, default 15")
                 @RequestParam(required = false) String page_size,
-            @ApiParam(value = "Order the result set by a field or fields. " +
-                    "Add - to the value sort in descending order. allowableValues = name, -name, modified, -modified")
                 @RequestParam(required = false) String order_by,
-            @ApiParam(value = "The min value of this modification of the resource")
                 @RequestParam(required = false) String modified_from,
-            @ApiParam(value = "The max value of this modification of the resource")
                 @RequestParam(required = false) String modified_to) {
 
         log.info(modified_to);
