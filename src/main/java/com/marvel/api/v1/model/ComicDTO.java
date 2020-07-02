@@ -43,8 +43,8 @@ public class ComicDTO {
     @Max(1000)
     private Integer pageCount;
 
-    private String thumbnail;
-    private String fullImage;
+    private String thumbnailImageName;
+    private String fullImageName;
     private List<ComicDateDTO> dates = new ArrayList<>();
     private List<ComicPriceDTO> prices = new ArrayList<>();
     private List<MarvelCharacterDTO> marvelCharacters = new ArrayList<>();

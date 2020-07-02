@@ -27,11 +27,8 @@ public class Comic {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime modified;
 
-    //@Lob
-    private String thumbnail;
-
-    //@Lob
-    private String fullImage;
+    private String thumbnailImageName;
+    private String fullImageName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comic", fetch = FetchType.LAZY)
     private List<ComicDate> dates = new ArrayList<>();

@@ -23,8 +23,8 @@ public class CharacterDtoToCharacterConverter implements Converter<MarvelCharact
                 .setName(characterDto.getName())
                 .setDescription(characterDto.getDescription())
                 .setModified(parseStringDateFormatToLocalDateTime(characterDto.getModified()))
-                .setThumbnail(characterDto.getThumbnail())
-                .setFullImage(characterDto.getFullImage());
+                .setThumbnailImageName(characterDto.getThumbnailImageName())
+                .setFullImageName(characterDto.getFullImageName());
 
         return character;
     }

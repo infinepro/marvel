@@ -58,8 +58,8 @@ public class ComicToComicDtoConverter implements Converter<Comic, ComicDTO>, Dat
                 .setModified(parseLocalDateTimeFormatToString(comic.getModified()))
                 .setFormat(comic.getFormat())
                 .setPageCount(comic.getPageCount())
-                .setThumbnail(comic.getThumbnail())
-                .setFullImage(comic.getFullImage())
+                .setThumbnailImageName(comic.getThumbnailImageName())
+                .setFullImageName(comic.getFullImageName())
                 .setDates(datesDto)
                 .setPrices(pricesDto)
                 .setMarvelCharacters(characters);

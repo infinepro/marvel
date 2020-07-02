@@ -27,11 +27,8 @@ public class MarvelCharacter {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime modified;
 
-    //@Lob
-    private String thumbnail;
-
-    //@Lob
-    private String fullImage;
+    private String thumbnailImageName;
+    private String fullImageName;
 
     @ManyToMany(mappedBy = "marvelCharacters",
             cascade = {
