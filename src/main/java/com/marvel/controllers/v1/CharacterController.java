@@ -44,12 +44,18 @@ public class CharacterController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<MarvelCharacterDTO> getCharacters(
-            @ApiParam(value = "The unique ID of the character") @RequestParam(required = false) String comic_id,
-            @ApiParam(value = "Page number of the list of models, default 0") @RequestParam(required = false) String number_page,
-            @ApiParam(value = "The number of models per page, default 15") @RequestParam(required = false) String page_size,
-            @ApiParam(value = "Sorting by field") @RequestParam(required = false) String order_by,
-            @ApiParam(value = "The number of models per page, default 15") @RequestParam(required = false) String modified_from,
-            @ApiParam(value = "The number of models per page, default 15") @RequestParam(required = false) String modified_to) {
+            @ApiParam(value = "The unique ID of the character")
+                @RequestParam(required = false) String comic_id,
+            @ApiParam(value = "Page number of the list of models, default 0")
+                @RequestParam(required = false) String number_page,
+            @ApiParam(value = "The number of models per page, default 15")
+                @RequestParam(required = false) String page_size,
+            @ApiParam(value = "Order the result set by a field or fields. Add a to the value sort in descending order.")
+                @RequestParam(required = false) String order_by,
+            @ApiParam(value = "The min value of this modification of the resource")
+                @RequestParam(required = false) String modified_from,
+            @ApiParam(value = "The max value of this modification of the resource")
+                @RequestParam(required = false) String modified_to) {
 
         log.info(modified_to);
         QueryCharacterModel model = modelHelperService

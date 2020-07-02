@@ -9,6 +9,7 @@ import com.marvel.services.ComicService;
 import com.marvel.services.ModelHelperService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -43,12 +44,18 @@ public class ComicController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> getComics(
-            @RequestParam(required = false) String number_page,
-            @RequestParam(required = false) String page_size,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String creating_date_from,
-            @RequestParam(required = false) String creating_date_to,
-            @RequestParam(required = false) String order_by) {
+            @ApiParam(value = "Page number of the list of models, default 0")
+                @RequestParam(required = false) String number_page,
+            @ApiParam(value = "The number of models per page, default 15")
+                @RequestParam(required = false) String page_size,
+            @ApiParam(value = "Filter by title comic")
+                @RequestParam(required = false) String title,
+            @ApiParam(value = "The min value of this modification of the resource")
+                @RequestParam(required = false) String creating_date_from,
+            @ApiParam(value = "The max value of this modification of the resource")
+                @RequestParam(required = false) String creating_date_to,
+            @ApiParam(value = "Order the result set by a field or fields. Add a to the value sort in descending order.")
+                @RequestParam(required = false) String order_by) {
 
         QueryComicModel model = modelHelperService
                 .setParametersIntoQueryComicModel(
@@ -75,11 +82,16 @@ public class ComicController {
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<MarvelCharacterDTO> getCharactersByComicId(
             @PathVariable String comicId,
-            @RequestParam(required = false) String number_page,
-            @RequestParam(required = false) String page_size,
-            @RequestParam(required = false) String order_by,
-            @RequestParam(required = false) String modified_from,
-            @RequestParam(required = false) String modified_to) {
+            @ApiParam(value = "Page number of the list of models, default 0")
+                @RequestParam(required = false) String number_page,
+            @ApiParam(value = "The number of models per page, default 15")
+                @RequestParam(required = false) String page_size,
+            @ApiParam(value = "Order the result set by a field or fields. Add a to the value sort in descending order.")
+                @RequestParam(required = false) String order_by,
+            @ApiParam(value = "The min value of this modification of the resource")
+                @RequestParam(required = false) String modified_from,
+            @ApiParam(value = "The max value of this modification of the resource")
+                @RequestParam(required = false) String modified_to) {
 
         QueryCharacterModel model = modelHelperService
                 .setParametersIntoQueryCharacterModel(
