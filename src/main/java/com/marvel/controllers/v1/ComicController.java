@@ -7,6 +7,8 @@ import com.marvel.exceptions.ComicNotFoundException;
 import com.marvel.services.CharacterService;
 import com.marvel.services.ComicService;
 import com.marvel.services.ModelHelperService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,7 @@ import java.time.format.DateTimeParseException;
 
 import static com.marvel.controllers.v1.ComicController.BASE_URL;
 
+@Api("Comic controller")
 @Slf4j
 @RestController
 @RequestMapping(BASE_URL)
@@ -36,6 +39,7 @@ public class ComicController {
         this.characterService = characterService;
     }
 
+    @ApiOperation(value = "This will get a list of comics.")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> getComics(
@@ -56,6 +60,7 @@ public class ComicController {
         return responseModel;
     }
 
+    @ApiOperation(value = "This will get comic by id.")
     @GetMapping("/{comicId}")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> getComic(@PathVariable Long comicId) {
@@ -65,6 +70,7 @@ public class ComicController {
         return responseModel;
     }
 
+    @ApiOperation(value = "This will get a list of Marvel characters by comic id.")
     @GetMapping("/{comicId}/characters")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<MarvelCharacterDTO> getCharactersByComicId(
@@ -85,6 +91,7 @@ public class ComicController {
         return dataWrapper;
     }
 
+    @ApiOperation(value = "This will add new comic.")
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
     public ModelDataWrapper<ComicDTO> addNewComic(@RequestBody @Valid ComicDTO model,
@@ -108,6 +115,7 @@ public class ComicController {
         return dataWrapper;
     }
 
+    @ApiOperation(value = "This will update comic by id.")
     @PutMapping("/{comicId}/update")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> updateComic(@RequestBody @Valid ComicDTO model,
@@ -129,6 +137,7 @@ public class ComicController {
         return dataWrapper;
     }
 
+    @ApiOperation(value = "This will delete comic by id.")
     @DeleteMapping("/{comicId}/delete")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> deleteComicById(@PathVariable Long comicId) {

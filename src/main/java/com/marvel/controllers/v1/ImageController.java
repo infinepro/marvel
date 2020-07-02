@@ -5,6 +5,8 @@ import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
 import com.marvel.services.CharacterService;
 import com.marvel.services.ImageService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,7 @@ import java.util.UUID;
 
 import static com.marvel.controllers.v1.ImageController.BASE_URL;
 
+@Api("Image controller")
 @Slf4j
 @RestController
 @RequestMapping(BASE_URL)
@@ -34,13 +37,14 @@ public class ImageController {
         this.imageService = imageService;
     }
 
+    @ApiOperation(value = "This will get image file by name")
     @GetMapping(value = "/get/{name}", produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getImageWithMediaType(@PathVariable String name) throws IOException {
 
         return imageService.getImageByName(name);
     }
 
-
+    @ApiOperation(value = "This will upload image file on server and return model with generated new file name.")
     @RequestMapping(method = RequestMethod.POST, value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ModelDataWrapper<Object> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
         log.warn("check");
@@ -49,7 +53,7 @@ public class ImageController {
 
         try {
             String fileName = imageService.uploadImage(file);
-            responseModel.setCode(200).setStatus("all ok, file save with name:" + fileName);
+            responseModel.setCode(200).setStatus("all ok, file save with name: " + fileName);
         } catch (IOException e) {
             return responseModel.setCode(500).setStatus("image not upload : " + e.getMessage());
         }

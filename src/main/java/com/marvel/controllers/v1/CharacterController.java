@@ -2,24 +2,29 @@ package com.marvel.controllers.v1;
 
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.MarvelCharacterDTO;
-import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.api.v1.model.ModelDataWrapper;
+import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
 import com.marvel.services.CharacterService;
 import com.marvel.services.ModelHelperService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.time.format.DateTimeParseException;
 
 import static com.marvel.controllers.v1.CharacterController.BASE_URL;
 
+
+@Api("MarvelCharacters Controller")
 @Slf4j
 @RestController
 @RequestMapping(BASE_URL)
@@ -35,14 +40,16 @@ public class CharacterController {
         this.modelHelperService = modelHelperService;
     }
 
+    @ApiOperation(value = "This will get a list of Marvel characters.")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ModelDataWrapper<MarvelCharacterDTO> getCharacters(@RequestParam(required = false) String comic_id,
-                                                              @RequestParam(required = false) String number_page,
-                                                              @RequestParam(required = false) String page_size,
-                                                              @RequestParam(required = false) String order_by,
-                                                              @RequestParam(required = false) String modified_from,
-                                                              @RequestParam(required = false) String modified_to) {
+    public ModelDataWrapper<MarvelCharacterDTO> getCharacters(
+            @ApiParam(value = "The unique ID of the character") @RequestParam(required = false) String comic_id,
+            @ApiParam(value = "Page number of the list of models, default 0") @RequestParam(required = false) String number_page,
+            @ApiParam(value = "The number of models per page, default 15") @RequestParam(required = false) String page_size,
+            @ApiParam(value = "Sorting by field") @RequestParam(required = false) String order_by,
+            @ApiParam(value = "The number of models per page, default 15") @RequestParam(required = false) String modified_from,
+            @ApiParam(value = "The number of models per page, default 15") @RequestParam(required = false) String modified_to) {
 
         log.info(modified_to);
         QueryCharacterModel model = modelHelperService
@@ -55,6 +62,7 @@ public class CharacterController {
         return dataWrapper;
     }
 
+    @ApiOperation(value = "This will get Marvel character by id.")
     @GetMapping("/{characterId}")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<MarvelCharacterDTO> getCharacter(@PathVariable Long characterId) {
@@ -65,6 +73,7 @@ public class CharacterController {
         return dataWrapper;
     }
 
+    @ApiOperation(value = "This will get a list of Marvel comics by character id.")
     @GetMapping("/{characterId}/comics")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> getComicsByCharacterId(@PathVariable Long characterId) {
@@ -75,6 +84,7 @@ public class CharacterController {
         return dataWrapper;
     }
 
+    @ApiOperation(value = "This will add a new Marvel character.")
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
     public ModelDataWrapper<MarvelCharacterDTO> addNewMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model,
@@ -98,6 +108,7 @@ public class CharacterController {
         return dataWrapper;
     }
 
+    @ApiOperation(value = "This will update Marvel character by id.")
     @PutMapping("/{characterId}/update")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@RequestBody @Valid MarvelCharacterDTO model,
@@ -120,6 +131,7 @@ public class CharacterController {
         return dataWrapper;
     }
 
+    @ApiOperation(value = "This will delete Marvel characters by id.")
     @DeleteMapping("/{characterId}/delete")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<MarvelCharacterDTO> updateMarvelCharacter(@PathVariable Long characterId) {
