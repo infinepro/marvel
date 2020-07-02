@@ -5,7 +5,7 @@ import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.ModelDataWrapper;
 import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.controllers.v1.api.CharacterControllerApi;
-import com.marvel.exceptions.BadParametersException;
+import com.marvel.exceptions.NotValidParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
 import com.marvel.services.CharacterService;
@@ -88,7 +88,7 @@ public class CharacterController implements CharacterControllerApi {
         if (bindingResult.hasErrors()) {
             log.error("creating character error");
             log.error(bindingResult.getAllErrors().toString());
-            throw new BadParametersException("Creating character error, bad request parameters");
+            throw new NotValidParametersException("Creating character error, bad request parameters");
         }
 
         ModelDataWrapper<MarvelCharacterDTO> dataWrapper = new ModelDataWrapper<>();
@@ -113,7 +113,7 @@ public class CharacterController implements CharacterControllerApi {
         if (bindingResult.hasErrors()) {
             log.error("updating character error");
             log.error(bindingResult.getAllErrors().toString());
-            throw new BadParametersException("Updating character error, bad request parameters");
+            throw new NotValidParametersException("Updating character error, bad request parameters");
         }
 
         ModelDataWrapper<MarvelCharacterDTO> dataWrapper = new ModelDataWrapper<>();
@@ -156,7 +156,7 @@ public class CharacterController implements CharacterControllerApi {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({BadParametersException.class, DateTimeParseException.class, NumberFormatException.class})
+    @ExceptionHandler({NotValidParametersException.class, DateTimeParseException.class, NumberFormatException.class})
     public ModelDataWrapper<Object> handleBadParameters(Exception exception) {
         log.error(exception.getMessage());
 

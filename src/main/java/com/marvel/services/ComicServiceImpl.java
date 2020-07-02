@@ -6,10 +6,9 @@ import com.marvel.api.v1.converters.ComicToComicDtoConverter;
 import com.marvel.api.v1.model.*;
 import com.marvel.domain.Comic;
 import com.marvel.domain.MarvelCharacter;
-import com.marvel.exceptions.BadParametersException;
+import com.marvel.exceptions.NotValidParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
-import com.marvel.exceptions.NotValidCharacterParametersException;
 import com.marvel.repositories.CharacterRepository;
 import com.marvel.repositories.ComicRepository;
 import org.springframework.data.domain.Page;
@@ -75,7 +74,7 @@ public class ComicServiceImpl implements ComicService, DateHelperService {
                         pageable);
             }
         } catch (DateTimeParseException e) {
-            throw new BadParametersException("Bad parameter, the date must be in the format: " + DATE_FORMAT);
+            throw new NotValidParametersException("Bad parameter, the date must be in the format: " + DATE_FORMAT);
         }
 
         return comics;
@@ -106,7 +105,7 @@ public class ComicServiceImpl implements ComicService, DateHelperService {
 
             pageCharacters.stream().peek(System.out::println);
         } catch (DateTimeParseException e) {
-            throw new BadParametersException("Bad parameter, the date must be in the format: " + DATE_FORMAT);
+            throw new NotValidParametersException("Bad parameter, the date must be in the format: " + DATE_FORMAT);
         }
 
         return pageCharacters;
@@ -147,7 +146,11 @@ public class ComicServiceImpl implements ComicService, DateHelperService {
                 throw new ComicNotFoundException("Comics not found");
 
             ModelDataContainer<ComicDTO> responseModel = new ModelDataContainer<>();
-            responseModel.setResults(comics);
+            responseModel
+                    .setResults(comics)
+                    .setCount(comics.size())
+                    .setNumberPage(model.getNumberPage())
+                    .setPageSize(model.getPageSize());;
 
             return responseModel;
         } catch (Exception e) {
@@ -183,7 +186,7 @@ public class ComicServiceImpl implements ComicService, DateHelperService {
 
             return responseModel;
         } catch (IllegalArgumentException e) {
-            throw new NotValidCharacterParametersException("Not valid data for Comic");
+            throw new NotValidParametersException("Not valid data for Comic");
         }
     }
 

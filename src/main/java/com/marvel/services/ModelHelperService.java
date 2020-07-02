@@ -2,7 +2,7 @@ package com.marvel.services;
 
 import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.api.v1.model.QueryComicModel;
-import com.marvel.exceptions.BadParametersException;
+import com.marvel.exceptions.NotValidParametersException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +21,7 @@ public class ModelHelperService {
                                                                     String pageSize,
                                                                     String orderBy,
                                                                     String modifiedStart,
-                                                                    String modifiedEnd) throws BadParametersException {
+                                                                    String modifiedEnd) throws NotValidParametersException {
 
         QueryCharacterModel model = new QueryCharacterModel();
 
@@ -56,7 +56,7 @@ public class ModelHelperService {
             else
                 model.setModifiedDateEnd(DEFAULT_MAX_DATE);
         } catch (Exception e) {
-            throw new BadParametersException("invalid url parameters");
+            throw new NotValidParametersException("invalid url parameters");
         }
 
         return model;
@@ -67,7 +67,7 @@ public class ModelHelperService {
                                                             String title,
                                                             String dateStart,
                                                             String dateEnd,
-                                                            String orderBy) throws BadParametersException {
+                                                            String orderBy) throws NotValidParametersException {
 
         QueryComicModel model = new QueryComicModel();
 
@@ -100,7 +100,7 @@ public class ModelHelperService {
             model.setTitle(title);
 
         } catch (Exception e) {
-            throw new BadParametersException("invalid url parameters");
+            throw new NotValidParametersException("invalid url parameters");
         }
 
         return model;

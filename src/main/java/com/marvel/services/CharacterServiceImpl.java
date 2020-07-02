@@ -8,10 +8,9 @@ import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.ModelDataContainer;
 import com.marvel.api.v1.model.QueryCharacterModel;
 import com.marvel.domain.MarvelCharacter;
-import com.marvel.exceptions.BadParametersException;
+import com.marvel.exceptions.NotValidParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
-import com.marvel.exceptions.NotValidCharacterParametersException;
 import com.marvel.repositories.CharacterRepository;
 import com.marvel.repositories.ComicRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +83,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
                         pageable);
             }
         } catch (DateTimeParseException e) {
-            throw new BadParametersException("Bad parameter, the date must be in the format: " + DATE_FORMAT);
+            throw new NotValidParametersException("Bad parameter, the date must be in the format: " + DATE_FORMAT);
         }
 
         return characters;
@@ -163,7 +162,7 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
 
             return responseModel;
         } catch (IllegalArgumentException e) {
-            throw new NotValidCharacterParametersException("Not valid data for MarvelCharacter");
+            throw new NotValidParametersException("Not valid data for MarvelCharacter");
         }
     }
 

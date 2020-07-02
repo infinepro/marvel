@@ -2,7 +2,7 @@ package com.marvel.controllers.v1;
 
 import com.marvel.api.v1.model.*;
 import com.marvel.controllers.v1.api.ComicControllerApi;
-import com.marvel.exceptions.BadParametersException;
+import com.marvel.exceptions.NotValidParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
 import com.marvel.services.CharacterService;
@@ -94,7 +94,7 @@ public class ComicController implements ComicControllerApi {
         if (bindingResult.hasErrors()) {
             log.error("creating comic error");
             log.error(bindingResult.getAllErrors().toString());
-            throw new BadParametersException("Creating comic error, bad request parameters");
+            throw new NotValidParametersException("Creating comic error, bad request parameters");
         }
 
         ModelDataWrapper<ComicDTO> dataWrapper = new ModelDataWrapper<>();
@@ -117,7 +117,7 @@ public class ComicController implements ComicControllerApi {
         if (bindingResult.hasErrors()) {
             log.error("updating comic error");
             log.error(bindingResult.getAllErrors().toString());
-            throw new BadParametersException("Updating comic error, bad request parameters");
+            throw new NotValidParametersException("Updating comic error, bad request parameters");
         }
 
         ModelDataWrapper<ComicDTO> dataWrapper = new ModelDataWrapper<>();
@@ -159,7 +159,7 @@ public class ComicController implements ComicControllerApi {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({BadParametersException.class, DateTimeParseException.class, NumberFormatException.class})
+    @ExceptionHandler({NotValidParametersException.class, DateTimeParseException.class, NumberFormatException.class})
     public ModelDataWrapper<Object> handleBadParameters(Exception exception) {
         log.error(exception.getMessage());
 
