@@ -1,15 +1,13 @@
 package com.marvel.controllers.v1;
 
 import com.marvel.api.v1.model.*;
+import com.marvel.controllers.v1.ApiInterfaces.ComicApi;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
 import com.marvel.services.CharacterService;
 import com.marvel.services.ComicService;
 import com.marvel.services.ModelHelperService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -23,7 +21,7 @@ import static com.marvel.controllers.v1.ComicController.BASE_URL;
 @Slf4j
 @RestController
 @RequestMapping(BASE_URL)
-public class ComicController {
+public class ComicController implements ComicApi {
 
     public static final String BASE_URL = "/v1/public/comics";
 

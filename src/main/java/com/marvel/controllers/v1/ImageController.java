@@ -1,6 +1,7 @@
 package com.marvel.controllers.v1;
 
 import com.marvel.api.v1.model.ModelDataWrapper;
+import com.marvel.controllers.v1.ApiInterfaces.ImageApi;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
 import com.marvel.services.CharacterService;
@@ -27,7 +28,7 @@ import static com.marvel.controllers.v1.ImageController.BASE_URL;
 @Slf4j
 @RestController
 @RequestMapping(BASE_URL)
-public class ImageController {
+public class ImageController implements ImageApi {
 
     public static final String BASE_URL = "/v1/public/images";
 
