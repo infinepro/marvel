@@ -20,8 +20,8 @@ public class ModelHelperService {
                                                                     String numberPage,
                                                                     String pageSize,
                                                                     String orderBy,
-                                                                    String modifiedFrom,
-                                                                    String modifiedTo) throws BadParametersException {
+                                                                    String modifiedStart,
+                                                                    String modifiedEnd) throws BadParametersException {
 
         QueryCharacterModel model = new QueryCharacterModel();
 
@@ -46,15 +46,15 @@ public class ModelHelperService {
             else
                 model.setOrderBy(ORDER_BY_NAME);
 
-            if (modifiedFrom != null)
-                model.setModifiedFrom(modifiedFrom);
+            if (modifiedStart != null)
+                model.setModifiedDateStart(modifiedStart);
             else
-                model.setModifiedFrom(DEFAULT_MIN_DATE);
+                model.setModifiedDateStart(DEFAULT_MIN_DATE);
 
-            if (modifiedTo != null)
-                model.setModifiedTo(modifiedTo);
+            if (modifiedEnd != null)
+                model.setModifiedDateEnd(modifiedEnd);
             else
-                model.setModifiedTo(DEFAULT_MAX_DATE);
+                model.setModifiedDateEnd(DEFAULT_MAX_DATE);
         } catch (Exception e) {
             throw new BadParametersException("invalid url parameters");
         }
@@ -65,8 +65,8 @@ public class ModelHelperService {
     public QueryComicModel setParametersIntoQueryComicModel(String numberPage,
                                                             String pageSize,
                                                             String title,
-                                                            String creatingDateFrom,
-                                                            String creatingDateTo,
+                                                            String dateStart,
+                                                            String dateEnd,
                                                             String orderBy) throws BadParametersException {
 
         QueryComicModel model = new QueryComicModel();
@@ -82,15 +82,15 @@ public class ModelHelperService {
             else
                 model.setPageSize(DEFAULT_PAGE_SIZE);
 
-            if (creatingDateFrom != null)
-                model.setDateFrom(creatingDateFrom);
+            if (dateStart != null)
+                model.setDateStart(dateStart);
             else
-                model.setDateFrom(DEFAULT_MIN_DATE);
+                model.setDateStart(DEFAULT_MIN_DATE);
 
-            if (creatingDateTo != null)
-                model.setDateTo(creatingDateTo);
+            if (dateEnd != null)
+                model.setDateEnd(dateEnd);
             else
-                model.setDateTo(DEFAULT_MAX_DATE);
+                model.setDateEnd(DEFAULT_MAX_DATE);
 
             if (orderBy != null)
                 model.setOrderBy(orderBy);

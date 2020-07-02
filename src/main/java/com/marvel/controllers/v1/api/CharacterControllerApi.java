@@ -1,4 +1,4 @@
-package com.marvel.controllers.v1.ApiInterfaces;
+package com.marvel.controllers.v1.api;
 
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.MarvelCharacterDTO;
@@ -8,9 +8,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.validation.BindingResult;
 
+import static com.marvel.services.DateHelperService.DATE_FORMAT;
+
 
 @Api("MarvelCharacters Controller")
-public interface CharacterApi {
+public interface CharacterControllerApi {
 
     @ApiOperation(value = "This will get a list of Marvel characters.")
     ModelDataWrapper<MarvelCharacterDTO> getCharacters(
@@ -21,12 +23,12 @@ public interface CharacterApi {
             @ApiParam(value = "The number of models per page, default 15")
                     String page_size,
             @ApiParam(value = "Order the result set by a field or fields. " +
-                    "Add - to the value sort in descending order. allowableValues = name, -name, modified, -modified")
+                    "Add - to the value sort in descending order.", allowableValues = "name, -name, modified, -modified")
                     String order_by,
-            @ApiParam(value = "The min value of this modification of the resource")
-                    String modified_from,
-            @ApiParam(value = "The max value of this modification of the resource")
-                    String modified_to);
+            @ApiParam(value = "The min value date modification or creating of this resource, format:" + DATE_FORMAT)
+                    String modified_start,
+            @ApiParam(value = "The max value date modification or creating of this resource, format:" + DATE_FORMAT)
+                    String modified_end);
 
     @ApiOperation(value = "This will get Marvel character by id.")
     ModelDataWrapper<MarvelCharacterDTO> getCharacter(Long characterId);

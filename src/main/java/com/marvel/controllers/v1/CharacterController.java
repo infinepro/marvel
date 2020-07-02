@@ -4,7 +4,7 @@ import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.MarvelCharacterDTO;
 import com.marvel.api.v1.model.ModelDataWrapper;
 import com.marvel.api.v1.model.QueryCharacterModel;
-import com.marvel.controllers.v1.ApiInterfaces.CharacterApi;
+import com.marvel.controllers.v1.api.CharacterControllerApi;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
@@ -24,7 +24,7 @@ import static com.marvel.controllers.v1.CharacterController.BASE_URL;
 @Slf4j
 @RestController
 @RequestMapping(BASE_URL)
-public class CharacterController implements CharacterApi {
+public class CharacterController implements CharacterControllerApi {
 
     public static final String BASE_URL = "/v1/public/characters";
 
@@ -43,13 +43,13 @@ public class CharacterController implements CharacterApi {
             @RequestParam(required = false) String number_page,
             @RequestParam(required = false) String page_size,
             @RequestParam(required = false) String order_by,
-            @RequestParam(required = false) String modified_from,
-            @RequestParam(required = false) String modified_to) {
+            @RequestParam(required = false) String modified_start,
+            @RequestParam(required = false) String modified_end) {
 
-        log.info(modified_to);
+        log.info(modified_end);
         QueryCharacterModel model = modelHelperService
                 .setParametersIntoQueryCharacterModel(
-                        comic_id, number_page, page_size, order_by, modified_from, modified_to);
+                        comic_id, number_page, page_size, order_by, modified_start, modified_end);
 
         ModelDataWrapper<MarvelCharacterDTO> dataWrapper = new ModelDataWrapper<>();
         dataWrapper.setData(characterService.getCharactersByModel(model));

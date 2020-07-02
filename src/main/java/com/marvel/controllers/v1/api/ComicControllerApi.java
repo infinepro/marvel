@@ -1,4 +1,4 @@
-package com.marvel.controllers.v1.ApiInterfaces;
+package com.marvel.controllers.v1.api;
 
 import com.marvel.api.v1.model.ComicDTO;
 import com.marvel.api.v1.model.MarvelCharacterDTO;
@@ -9,8 +9,10 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import static com.marvel.services.DateHelperService.DATE_FORMAT;
+
 @Api("Comic controller")
-public interface ComicApi {
+public interface ComicControllerApi {
 
     @ApiOperation(value = "This will get a list of comics.")
     ModelDataWrapper<ComicDTO> getComics(
@@ -20,10 +22,10 @@ public interface ComicApi {
                     String page_size,
             @ApiParam(value = "Filter by title comic")
                     String title,
-            @ApiParam(value = "The min value of this modification of the resource")
-                    String creating_date_from,
-            @ApiParam(value = "The max value of this modification of the resource")
-                    String creating_date_to,
+            @ApiParam(value = "Start date of the first date range event, format: " + DATE_FORMAT)
+                    String date_start,
+            @ApiParam(value = "End date of the first date range event, format: " + DATE_FORMAT)
+                    String date_end,
             @ApiParam(value = "Order the result set by a field or fields. " +
                     "Add - to the value sort in descending order.", allowableValues = "title, -title, modified, -modified")
                     String order_by);
@@ -41,10 +43,10 @@ public interface ComicApi {
             @ApiParam(value = "Order the result set by a field or fields. " +
                     "Add - to the value sort in descending order.", allowableValues = "name, -name, modified, -modified")
                     String order_by,
-            @ApiParam(value = "The min value of this modification of the resource")
-                    String modified_from,
-            @ApiParam(value = "The max value of this modification of the resource")
-                    String modified_to);
+            @ApiParam(value = "Start date of the first date range event, format: " + DATE_FORMAT)
+                    String date_start,
+            @ApiParam(value = "End date of the first date range event, format: " + DATE_FORMAT)
+                    String date_end);
 
     @ApiOperation(value = "This will add new comic.")
     ModelDataWrapper<ComicDTO> addNewComic(ComicDTO model, BindingResult bindingResult);

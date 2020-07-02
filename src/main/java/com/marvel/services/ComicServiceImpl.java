@@ -64,13 +64,13 @@ public class ComicServiceImpl implements ComicService, DateHelperService {
         try {
             if (model.getTitle() == null) {
                 comics = comicRepository.findAllBetweenDatesAndOrdered(
-                        parseStringDateFormatToLocalDateTime(model.getDateFrom()),
-                        parseStringDateFormatToLocalDateTime(model.getDateTo()),
+                        parseStringDateFormatToLocalDateTime(model.getDateStart()),
+                        parseStringDateFormatToLocalDateTime(model.getDateEnd()),
                         pageable);
             } else {
                 comics = comicRepository.findAllByTitleAndBetweenDatesAndOrdered(
-                        parseStringDateFormatToLocalDateTime(model.getDateFrom()),
-                        parseStringDateFormatToLocalDateTime(model.getDateTo()),
+                        parseStringDateFormatToLocalDateTime(model.getDateStart()),
+                        parseStringDateFormatToLocalDateTime(model.getDateEnd()),
                         model.getTitle(),
                         pageable);
             }
@@ -99,8 +99,8 @@ public class ComicServiceImpl implements ComicService, DateHelperService {
         Page<MarvelCharacter> pageCharacters;
         try {
             pageCharacters = characterRepository.findAllByComicIdAndBetweenDatesAndOrdered(
-                    parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
-                    parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
+                    parseStringDateFormatToLocalDateTime(model.getModifiedDateStart()),
+                    parseStringDateFormatToLocalDateTime(model.getModifiedDateEnd()),
                     model.getComicId(),
                     pageable);
 

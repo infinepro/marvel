@@ -11,8 +11,8 @@ public class QueryComicModel {
     private Integer numberPage;
     private Integer pageSize;
     private String title;
-    private String dateFrom;
-    private String dateTo;
+    private String dateStart;
+    private String dateEnd;
     private String orderBy;
 
 }

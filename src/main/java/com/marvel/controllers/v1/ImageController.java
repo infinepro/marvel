@@ -1,26 +1,17 @@
 package com.marvel.controllers.v1;
 
 import com.marvel.api.v1.model.ModelDataWrapper;
-import com.marvel.controllers.v1.ApiInterfaces.ImageApi;
-import com.marvel.exceptions.CharacterNotFoundException;
-import com.marvel.exceptions.ComicNotFoundException;
-import com.marvel.services.CharacterService;
+import com.marvel.controllers.v1.api.ImageControllerApi;
 import com.marvel.services.ImageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.UUID;
 
 import static com.marvel.controllers.v1.ImageController.BASE_URL;
 
@@ -28,7 +19,7 @@ import static com.marvel.controllers.v1.ImageController.BASE_URL;
 @Slf4j
 @RestController
 @RequestMapping(BASE_URL)
-public class ImageController implements ImageApi {
+public class ImageController implements ImageControllerApi {
 
     public static final String BASE_URL = "/v1/public/images";
 

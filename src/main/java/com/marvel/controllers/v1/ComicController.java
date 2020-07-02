@@ -1,7 +1,7 @@
 package com.marvel.controllers.v1;
 
 import com.marvel.api.v1.model.*;
-import com.marvel.controllers.v1.ApiInterfaces.ComicApi;
+import com.marvel.controllers.v1.api.ComicControllerApi;
 import com.marvel.exceptions.BadParametersException;
 import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
@@ -21,7 +21,7 @@ import static com.marvel.controllers.v1.ComicController.BASE_URL;
 @Slf4j
 @RestController
 @RequestMapping(BASE_URL)
-public class ComicController implements ComicApi {
+public class ComicController implements ComicControllerApi {
 
     public static final String BASE_URL = "/v1/public/comics";
 
@@ -43,13 +43,13 @@ public class ComicController implements ComicApi {
                 @RequestParam(required = false) String number_page,
                 @RequestParam(required = false) String page_size,
                 @RequestParam(required = false) String title,
-                @RequestParam(required = false) String creating_date_from,
-                @RequestParam(required = false) String creating_date_to,
+                @RequestParam(required = false) String date_start,
+                @RequestParam(required = false) String date_end,
                 @RequestParam(required = false) String order_by) {
 
         QueryComicModel model = modelHelperService
                 .setParametersIntoQueryComicModel(
-                        number_page, page_size, title, creating_date_from, creating_date_to, order_by);
+                        number_page, page_size, title, date_start, date_end, order_by);
 
         ModelDataWrapper<ComicDTO> responseModel = new ModelDataWrapper<>();
         responseModel.setData(comicService.getComics(model));
@@ -73,12 +73,12 @@ public class ComicController implements ComicApi {
                 @RequestParam(required = false) String number_page,
                 @RequestParam(required = false) String page_size,
                 @RequestParam(required = false) String order_by,
-                @RequestParam(required = false) String modified_from,
-                @RequestParam(required = false) String modified_to) {
+                @RequestParam(required = false) String date_start,
+                @RequestParam(required = false) String date_end) {
 
         QueryCharacterModel model = modelHelperService
                 .setParametersIntoQueryCharacterModel(
-                        comicId, number_page, page_size, order_by, modified_from, modified_to);
+                        comicId, number_page, page_size, order_by, date_start, date_end);
 
         ModelDataWrapper<MarvelCharacterDTO> dataWrapper = new ModelDataWrapper<>();
         dataWrapper.setData(comicService.getCharactersByModel(model));

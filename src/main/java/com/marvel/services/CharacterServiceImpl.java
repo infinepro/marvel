@@ -73,14 +73,14 @@ public class CharacterServiceImpl implements CharacterService, DateHelperService
         try {
             if (model.getComicId().equals(MINUS_ONE)) {
                 characters = characterRepository.findAllByModifiedDateAndOrdered(
-                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
-                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
+                        parseStringDateFormatToLocalDateTime(model.getModifiedDateStart()),
+                        parseStringDateFormatToLocalDateTime(model.getModifiedDateEnd()),
                         pageable);
             } else {
                 characters = characterRepository.findAllByComicIdAndBetweenModifiedDateAndOrdered(
                         model.getComicId(),
-                        parseStringDateFormatToLocalDateTime(model.getModifiedFrom()),
-                        parseStringDateFormatToLocalDateTime(model.getModifiedTo()),
+                        parseStringDateFormatToLocalDateTime(model.getModifiedDateStart()),
+                        parseStringDateFormatToLocalDateTime(model.getModifiedDateEnd()),
                         pageable);
             }
         } catch (DateTimeParseException e) {
