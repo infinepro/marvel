@@ -1,4 +1,4 @@
-# docker run -d -p 3306:3306 -v ~/Documents/java/marvel/dockerfiles/mysql/etc/mysql/:/etc/mysql/conf.d -v ~/Documents/java/marvel/dockerfiles/mysql/var/lib/mysql:/var/lib/mysql --name mysql-developer-image -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=sfg_dev -e MYSQL_USER=sfg_dev_user -e MYSQL_PASSWORD=123 mysql:latest
+# docker run -d -p 3306:3306 -v ~/Documents/java/marvel/src/main/resources/dockerfiles/mysql/etc/mysql/:/etc/mysql/conf.d -v ~/Documents/java/marvel/src/main/resources/dockerfiles/mysql/var/lib/mysql:/var/lib/mysql --name mysql-developer-image -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=sfg_dev -e MYSQL_USER=sfg_dev_user -e MYSQL_PASSWORD=123 mysql:latest
 
 spring:
   datasource:
@@ -13,3 +13,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
     database: mysql
+
+upload:
+  path: src/main/resources/static/images/

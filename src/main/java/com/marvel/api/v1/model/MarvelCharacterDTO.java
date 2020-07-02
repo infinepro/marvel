@@ -26,8 +26,8 @@ public class MarvelCharacterDTO {
 
     @Length(max = 19, min = 19)
     private String modified;
-    private Byte[] thumbnail;
-    private Byte[] fullImage;
+    private String thumbnail;
+    private String fullImage;
 
     public MarvelCharacterDTO() {
         this.modified = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT));

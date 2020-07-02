@@ -27,11 +27,11 @@ public class Comic {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime modified;
 
-    @Lob
-    private Byte[] thumbnail;
+    //@Lob
+    private String thumbnail;
 
-    @Lob
-    private Byte[] fullImage;
+    //@Lob
+    private String fullImage;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comic", fetch = FetchType.LAZY)
     private List<ComicDate> dates = new ArrayList<>();
@@ -89,8 +89,6 @@ public class Comic {
                 ", modified=" + modified +
                 ", format='" + format + '\'' +
                 ", pageCount=" + pageCount +
-                ", thumbnail=" + Arrays.toString(thumbnail) +
-                ", fullImage=" + Arrays.toString(fullImage) +
                 ", dates=" + dates +
                 ", prices=" + prices +
                 ", characters=" + marvelCharacters +

@@ -10,11 +10,16 @@ import com.marvel.repositories.ComicPriceRepository;
 import com.marvel.repositories.ComicRepository;
 import com.marvel.services.DateHelperService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,6 +40,9 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private final ComicDateRepository comicDateRepository;
     private final ComicPriceRepository comicPriceRepository;
 
+//    @Value("${upload.path}")
+//    private String uploadPath;
+
     public BootstrapData(CharacterRepository characterRepository,
                          ComicRepository comicRepository,
                          ComicDateRepository comicDateRepository,
@@ -52,6 +60,10 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         if (comicRepository.count() == 0)
             loadComics();
         log.warn("load data success");
+/*
+        File uploadDir = new File(uploadPath);
+        uploadDir.mkdir();
+        log.warn(uploadPath);*/
     }
 
     private List<MarvelCharacter> getCharacters() {
@@ -61,29 +73,29 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
                 .setName("Groot")
                 .setDescription("super strong tree")
                 .setModified(nowDateTime)
-                .setThumbnail(new Byte[]{2, 4, 3})
-                .setFullImage(new Byte[]{1, 4, 72}));
+                .setThumbnail("Image1.jpg")
+                .setFullImage("Image2.jpg"));
 
         characters.add(new MarvelCharacter()
                 .setName("Thanos")
                 .setDescription("super strong villain")
                 .setModified(nowDateTime)
-                .setThumbnail(new Byte[]{2, 4, 3})
-                .setFullImage(new Byte[]{1, 4, 72}));
+                .setThumbnail("Image43jpg")
+                .setFullImage("Image63jpg"));
 
         characters.add(new MarvelCharacter()
                 .setName("Red Hulk")
                 .setDescription("red NEGODIAY")
                 .setModified(nowDateTime)
-                .setThumbnail(new Byte[]{1, 4, 3})
-                .setFullImage(new Byte[]{4, 4, 67}));
+                .setThumbnail("Image21jpg")
+                .setFullImage("Image25jpg"));
 
         characters.add(new MarvelCharacter()
                 .setName("Hulk")
                 .setDescription("green hero")
                 .setModified(nowDateTime)
-                .setThumbnail(new Byte[]{1, 4, 3})
-                .setFullImage(new Byte[]{4, 4, 67}));
+                .setThumbnail("Image73jpg")
+                .setFullImage("Image23412jpg"));
 
         return characters;
     }
@@ -109,8 +121,8 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
                 .setModified(prevDateTime)
                 .setFormat("A4")
                 .setPageCount(30)
-                .setThumbnail(new Byte[]{2, 4, 3})
-                .setFullImage(new Byte[]{1, 4, 72})
+                .setThumbnail("Image23123sdfgjpg")
+                .setFullImage("Image23jpg123123")
                 .setMarvelCharacters(charactersOne);
 
         newComic.addComicDate(new ComicDate().setType("hard").setDate(prevDateTime));
@@ -126,8 +138,8 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
                 .setModified(prevDateTime)
                 .setFormat("A3")
                 .setPageCount(30)
-                .setThumbnail(new Byte[]{2, 4, 3})
-                .setFullImage(new Byte[]{1, 4, 72})
+                .setThumbnail("Image12312323jpg")
+                .setFullImage("Image2zfgasfg3jpg")
                 .setMarvelCharacters(charactersTwo);
 
         oldComic.addComicDate(new ComicDate().setType("hard").setDate(prevDateTime));

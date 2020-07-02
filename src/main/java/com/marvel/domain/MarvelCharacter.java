@@ -3,6 +3,9 @@ package com.marvel.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.URL;
+import org.springframework.data.web.JsonPath;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,11 +27,11 @@ public class MarvelCharacter {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime modified;
 
-    @Lob
-    private Byte[] thumbnail;
+    //@Lob
+    private String thumbnail;
 
-    @Lob
-    private Byte[] fullImage;
+    //@Lob
+    private String fullImage;
 
     @ManyToMany(mappedBy = "marvelCharacters",
             cascade = {
@@ -65,8 +68,6 @@ public class MarvelCharacter {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", modified=" + modified +
-                ", thumbnail=" + Arrays.toString(thumbnail) +
-                ", fullImage=" + Arrays.toString(fullImage) + "} + \n";
+                ", modified=" + modified;
     }
 }
