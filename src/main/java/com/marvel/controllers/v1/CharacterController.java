@@ -10,10 +10,7 @@ import com.marvel.exceptions.CharacterNotFoundException;
 import com.marvel.exceptions.ComicNotFoundException;
 import com.marvel.services.CharacterService;
 import com.marvel.services.ModelHelperService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -42,12 +39,12 @@ public class CharacterController implements CharacterApi {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<MarvelCharacterDTO> getCharacters(
-                @RequestParam(required = false) String comic_id,
-                @RequestParam(required = false) String number_page,
-                @RequestParam(required = false) String page_size,
-                @RequestParam(required = false) String order_by,
-                @RequestParam(required = false) String modified_from,
-                @RequestParam(required = false) String modified_to) {
+            @RequestParam(required = false) String comic_id,
+            @RequestParam(required = false) String number_page,
+            @RequestParam(required = false) String page_size,
+            @RequestParam(required = false) String order_by,
+            @RequestParam(required = false) String modified_from,
+            @RequestParam(required = false) String modified_to) {
 
         log.info(modified_to);
         QueryCharacterModel model = modelHelperService

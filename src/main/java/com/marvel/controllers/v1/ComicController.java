@@ -20,7 +20,6 @@ import java.time.format.DateTimeParseException;
 
 import static com.marvel.controllers.v1.ComicController.BASE_URL;
 
-@Api("Comic controller")
 @Slf4j
 @RestController
 @RequestMapping(BASE_URL)
@@ -40,22 +39,14 @@ public class ComicController {
         this.characterService = characterService;
     }
 
-    @ApiOperation(value = "This will get a list of comics.")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> getComics(
-            @ApiParam(value = "Page number of the list of models, default 0")
                 @RequestParam(required = false) String number_page,
-            @ApiParam(value = "The number of models per page, default 15")
                 @RequestParam(required = false) String page_size,
-            @ApiParam(value = "Filter by title comic")
                 @RequestParam(required = false) String title,
-            @ApiParam(value = "The min value of this modification of the resource")
                 @RequestParam(required = false) String creating_date_from,
-            @ApiParam(value = "The max value of this modification of the resource")
                 @RequestParam(required = false) String creating_date_to,
-            @ApiParam(value = "Order the result set by a field or fields. " +
-                    "Add - to the value sort in descending order.", allowableValues = "title, -title, modified, -modified")
                 @RequestParam(required = false) String order_by) {
 
         QueryComicModel model = modelHelperService
@@ -68,7 +59,6 @@ public class ComicController {
         return responseModel;
     }
 
-    @ApiOperation(value = "This will get comic by id.")
     @GetMapping("/{comicId}")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> getComic(@PathVariable Long comicId) {
@@ -78,21 +68,14 @@ public class ComicController {
         return responseModel;
     }
 
-    @ApiOperation(value = "This will get a list of Marvel characters by comic id.")
     @GetMapping("/{comicId}/characters")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<MarvelCharacterDTO> getCharactersByComicId(
             @PathVariable String comicId,
-            @ApiParam(value = "Page number of the list of models, default 0")
                 @RequestParam(required = false) String number_page,
-            @ApiParam(value = "The number of models per page, default 15")
                 @RequestParam(required = false) String page_size,
-            @ApiParam(value = "Order the result set by a field or fields. " +
-                    "Add - to the value sort in descending order.", allowableValues = "name, -name, modified, -modified")
                 @RequestParam(required = false) String order_by,
-            @ApiParam(value = "The min value of this modification of the resource")
                 @RequestParam(required = false) String modified_from,
-            @ApiParam(value = "The max value of this modification of the resource")
                 @RequestParam(required = false) String modified_to) {
 
         QueryCharacterModel model = modelHelperService
@@ -105,7 +88,6 @@ public class ComicController {
         return dataWrapper;
     }
 
-    @ApiOperation(value = "This will add new comic.")
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
     public ModelDataWrapper<ComicDTO> addNewComic(@RequestBody @Valid ComicDTO model,
@@ -129,7 +111,6 @@ public class ComicController {
         return dataWrapper;
     }
 
-    @ApiOperation(value = "This will update comic by id.")
     @PutMapping("/{comicId}/update")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> updateComic(@RequestBody @Valid ComicDTO model,
@@ -151,7 +132,6 @@ public class ComicController {
         return dataWrapper;
     }
 
-    @ApiOperation(value = "This will delete comic by id.")
     @DeleteMapping("/{comicId}/delete")
     @ResponseStatus(HttpStatus.OK)
     public ModelDataWrapper<ComicDTO> deleteComicById(@PathVariable Long comicId) {
