@@ -50,7 +50,8 @@ public class CharacterController {
                 @RequestParam(required = false) String number_page,
             @ApiParam(value = "The number of models per page, default 15")
                 @RequestParam(required = false) String page_size,
-            @ApiParam(value = "Order the result set by a field or fields. Add a to the value sort in descending order.")
+            @ApiParam(value = "Order the result set by a field or fields. " +
+                    "Add - to the value sort in descending order. allowableValues = name, -name, modified, -modified")
                 @RequestParam(required = false) String order_by,
             @ApiParam(value = "The min value of this modification of the resource")
                 @RequestParam(required = false) String modified_from,
