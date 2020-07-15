@@ -2,7 +2,7 @@
 
 <pre>mvn clean package</pre>
 
-<pre>sudo chmod 755 -R .</pre>
+<pre><i>(опционально)</i><br/>sudo chmod 755 -R .</pre>
 
 <pre>docker build -f Dockerfile -t marvel_comics_app .</pre>
 
